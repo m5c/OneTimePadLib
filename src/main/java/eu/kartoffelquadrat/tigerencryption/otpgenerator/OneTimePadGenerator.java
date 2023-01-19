@@ -37,14 +37,13 @@ public class OneTimePadGenerator {
    */
   public static void main(String[] args) throws IOException {
 
-    File otpTargetDir = createOtpTargetDir();
+    File otpTargetDir = createOtpTargetDir(OTP_NAME);
 
 
     // create s many chunks as configured in CHUNK_AMOUNT, persist them all in target dir.
     for (int chunkId = 1; chunkId <= CHUNK_AMOUNT; chunkId++) {
       byte[] chunk = generateChunk(CHUNK_SIZE);
-      String zeroPaddedChunkName = String.format("%04d", chunkId);
-      persistChunk(chunk, zeroPaddedChunkName, otpTargetDir);
+      persistChunk(chunk, chunkId, otpTargetDir);
     }
 
 
@@ -58,10 +57,11 @@ public class OneTimePadGenerator {
    * Safely creates the target directory for the new otp. This directory will contain all created
    * chunks. Throws a runtimeException if the directory already exists.
    *
+   * @param dirName as the name of the folder to create.
    * @return File object pointing to the newly created otp target direcotry.
    */
-  private static File createOtpTargetDir() {
-    File otpTargetDir = new File(System.getProperty("user.dir") + "/" + OTP_NAME);
+  public static File createOtpTargetDir(String dirName) {
+    File otpTargetDir = new File(System.getProperty("user.dir") + "/" + dirName);
     if (!otpTargetDir.mkdir()) {
       throw new RuntimeException("Target directory \"" + OTP_NAME + "\" already exists.");
     }
@@ -74,9 +74,9 @@ public class OneTimePadGenerator {
    * @param chunkSize as the requested array length in bytes.
    * @return a byte array of the requested sie, filled with random content.
    */
-  private static byte[] generateChunk(int chunkSize) {
+  public static byte[] generateChunk(int chunkSize) {
     SecureRandom random = new SecureRandom();
-    byte[] bytes = new byte[CHUNK_SIZE];
+    byte[] bytes = new byte[chunkSize];
     random.nextBytes(bytes);
     return bytes;
   }
@@ -90,9 +90,10 @@ public class OneTimePadGenerator {
    * @param targetDir as the target otp dir the new chunk file should be added to.
    * @throws IOException in case writing to disk fails.
    */
-  private static void persistChunk(byte[] chunk, String chunkId, File targetDir)
+  public static void persistChunk(byte[] chunk, int chunkId, File targetDir)
       throws IOException {
-    String pathBuilder = targetDir + "/" + chunkId;
+    String zeroPaddedChunkName = String.format("%04d", chunkId);
+    String pathBuilder = targetDir + "/" + zeroPaddedChunkName;
     try (FileOutputStream fos = new FileOutputStream(pathBuilder)) {
       fos.write(chunk);
       fos.flush();
