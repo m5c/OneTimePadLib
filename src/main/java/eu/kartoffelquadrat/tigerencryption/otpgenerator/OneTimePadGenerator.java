@@ -76,6 +76,7 @@ public class OneTimePadGenerator {
    * use encryption of the individual messages while the pad serves as unit for pretection of a
    * communication.
    *
+   * @param parties as sting array descripbing the names of all parties using this pad.
    * @return OneTimePad object holding the requested amount of chunks and size.
    */
   public static OneTimePad generatePad(String[] parties) {
@@ -88,6 +89,7 @@ public class OneTimePadGenerator {
    *
    * @param padSize   as the amount of chunks to generate.
    * @param chunkSize as the amount of bytes per generated chunk.
+   * @param parties   as sting array descripbing the names of all parties using this pad.
    * @return OneTimePad object holding the requested amount of chunks and size.
    */
   public static OneTimePad generatePad(int padSize, int chunkSize, String[] parties) {
@@ -109,13 +111,17 @@ public class OneTimePadGenerator {
   }
 
   /**
-   * Basic cheks to ensure the array of provided parties is sane. Each entry must follow "namme@machine" convention.
-   * @param parties
+   * Basic cheks to ensure the array of provided parties is sane. Each entry must follow
+   * "namme@machine" convention.
+   *
+   * @param parties as the array of individual OTP using parties.
    */
   private static void validateParties(String[] parties) {
     for (int i = 0; i < parties.length; i++) {
-      if(!parties[i].matches("[a-z|A-Z|\\-]+@[a-z|A-Z|\\-]+"))
-        throw new PadGeneratorException("Party \""+parties[i]+"\" does not follow \"name@machine\" convention.");
+      if (!parties[i].matches("[a-z|A-Z|\\-]+@[a-z|A-Z|\\-]+")) {
+        throw new PadGeneratorException(
+            "Party \"" + parties[i] + "\" does not follow \"name@machine\" convention.");
+      }
     }
   }
 
