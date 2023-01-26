@@ -9,7 +9,25 @@ One-Time-Pads.
 
 This is only the OTP generator. You still need an Encryptor / Decryptor software (e.g. the [TigerEncrytionDesktopApp](...) or [TigerEncryptionMobileApp](...)) to securely communicate.
 
+### Terminology
+
+One time pads are created for usage between a fixed set of communicating parties. All parties must hold the same *One Time Pad*.  
+In the context a *One Time Pad* is definied as a 2D byte array.
+
+ * Each entry on the outer array is defined as a *Chunk*.
+    * All *Chunk*s have the same size.
+    * The amount of *Chunk*s to create and the size per *Chunk* [can be customized](#customization).
+ * Chunks are used to XOR encrypt individual messages.
+    * Each chunk is reserved to a single encrypting party and must not be used by other parties for *encryption*. See []
+
 ## Usage
+
+There are two ways to use this software:
+
+ * As standalone program, to create *One Time Pads* and store them on disk for later use.
+ * As library, to retrieve new *One Time Pads* as objects.
+
+### Standalone Use
 
  1) Compile this software with:  
 ```mvn clean package```
@@ -21,6 +39,29 @@ This is only the OTP generator. You still need an Encryptor / Decryptor software
  4) Place the folder *within* the ```.otp``` folder in your home directory.
 
  > *Note: To prevent accidental overwrite of existing OTPs, the generator exit if the default output folder otp-XXX already exists.*
+
+### Library Use
+
+ 1) Add this repository to your ```pom.xml```:  
+```xml
+...
+```
+
+ 2) Add this dependency reference to your ```pom.xml```:  
+```xml
+...
+```
+
+ 3) Invoke the library from your project code:  
+```java
+    import eu.kartoffelquadrat.tigerencryption.otpgenerator.OneTimePadGenerator;
+    import eu.kartoffelquadrat.tigerencryption.otpgenerator.OneTimePadGenerator;
+    
+    [...]
+    
+    OneTimePad otp = OneTimePadGenerator.createOneTimePad(..., ...);
+```
+
 
 ## Customization
 

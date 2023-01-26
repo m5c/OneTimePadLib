@@ -22,11 +22,11 @@ public class OneTimePadGenerator {
   // number of bytes used as chunk size
   private static final int CHUNK_SIZE = 512;
 
-  // total number of chunks to generate
-  private static final int CHUNK_AMOUNT = 4096;
+  // total number of chunks to generate in a one time pad
+  private static final int ONE_TIME_PAD_SIZE = 4096;
 
   // Name of the created target folder, storing all chunks
-  private static final String OTP_NAME = "otp-XXX";
+  private static final String ONE_TIME_PAD_NAME = "otp-XXX";
 
 
   /**
@@ -37,11 +37,13 @@ public class OneTimePadGenerator {
    */
   public static void main(String[] args) throws IOException {
 
-    File otpTargetDir = createOtpTargetDir(OTP_NAME);
+    File otpTargetDir = createOtpTargetDir(ONE_TIME_PAD_NAME);
 
+    // create the one time pad, consisting of many chunks for the individual messages.
+    byte[][] oneTimePad = generatePad(ONE_TIME_PAD_SIZE, CHUNK_SIZE);
 
     // create s many chunks as configured in CHUNK_AMOUNT, persist them all in target dir.
-    for (int chunkId = 1; chunkId <= CHUNK_AMOUNT; chunkId++) {
+    for (int chunkId = 1; chunkId <= ONE_TIME_PAD_SIZE; chunkId++) {
       byte[] chunk = generateChunk(CHUNK_SIZE);
       persistChunk(chunk, chunkId, otpTargetDir);
     }
@@ -60,12 +62,16 @@ public class OneTimePadGenerator {
    * @param dirName as the name of the folder to create.
    * @return File object pointing to the newly created otp target direcotry.
    */
-  public static File createOtpTargetDir(String dirName) {
+  protected static File createOtpTargetDir(String dirName) {
     File otpTargetDir = new File(System.getProperty("user.dir") + "/" + dirName);
     if (!otpTargetDir.mkdir()) {
-      throw new RuntimeException("Target directory \"" + OTP_NAME + "\" already exists.");
+      throw new RuntimeException("Target directory \"" + ONE_TIME_PAD_NAME + "\" already exists.");
     }
     return otpTargetDir;
+  }
+
+  public static byte[][] generatePad(int padSize, int chunkSize) {
+    return null;
   }
 
   /**
@@ -90,7 +96,7 @@ public class OneTimePadGenerator {
    * @param targetDir as the target otp dir the new chunk file should be added to.
    * @throws IOException in case writing to disk fails.
    */
-  public static void persistChunk(byte[] chunk, int chunkId, File targetDir)
+  protected static void persistChunk(byte[] chunk, int chunkId, File targetDir)
       throws IOException {
     String zeroPaddedChunkName = String.format("%04d", chunkId);
     String pathBuilder = targetDir + "/" + zeroPaddedChunkName;
@@ -99,5 +105,4 @@ public class OneTimePadGenerator {
       fos.flush();
     }
   }
-
 }
