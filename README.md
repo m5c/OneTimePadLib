@@ -1,5 +1,7 @@
 # One-Time-Pad Generator
 
+![mavenci](https://github.com/m5c/TigerEncryptionOtpGenerator/actions/workflows/maven.yml/badge.svg)
+
 This software is part of the Tiger Encryption suite and responsible for generation of random
 One-Time-Pads.
 
