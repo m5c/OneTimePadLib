@@ -7,7 +7,7 @@ One-Time-Pads.
 
 ## About
 
-This is only the OTP generator. You still need an Encryptor / Decryptor software (e.g. the [TigerEncrytionDesktopApp](...) or [TigerEncryptionMobileApp](...)) to securely communicate.
+This is only the OTP generator. You still need an Encryptor / Decryptor software (e.g. the [TigerEncrytionDesktopApp](https://github.com/m5c/TigerEncryptionDesktopApp) or [TigerEncryptionMobileApp](https://github.com/m5c/TigerEncryptionMobileApp)) to securely communicate.
 
 ### Terminology
 

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.sql.Date;
 
 /**
  * Generator for one time pads. Per default each pad consists of 4096 chunks, each filled with 512
@@ -30,7 +31,8 @@ public class OneTimePadGenerator {
 
 
   /**
-   * Main logic for creation of new One Time Pad.
+   * Main logic for creating a new One Time Pad and storing the contents on disk.
+   * TODO: persist OTP in JSON format + add a checksum file next to serialized otp.
    *
    * @param args none.
    * @throws IOException in case persisting the one time pad to disk encounter an error.
@@ -40,12 +42,11 @@ public class OneTimePadGenerator {
     File otpTargetDir = createOtpTargetDir(ONE_TIME_PAD_NAME);
 
     // create the one time pad, consisting of many chunks for the individual messages.
-    byte[][] oneTimePad = generatePad(ONE_TIME_PAD_SIZE, CHUNK_SIZE);
+    OneTimePad pad = generatePad(args);
 
-    // create s many chunks as configured in CHUNK_AMOUNT, persist them all in target dir.
-    for (int chunkId = 1; chunkId <= ONE_TIME_PAD_SIZE; chunkId++) {
-      byte[] chunk = generateChunk(CHUNK_SIZE);
-      persistChunk(chunk, chunkId, otpTargetDir);
+    // Store the one time pad on disk
+    for (int chunkId = 0; chunkId < pad.getChunkAmount(); chunkId++) {
+      persistChunk(pad.getChunkContent(chunkId), chunkId, otpTargetDir);
     }
 
 
@@ -70,9 +71,54 @@ public class OneTimePadGenerator {
     return otpTargetDir;
   }
 
-  public static byte[][] generatePad(int padSize, int chunkSize) {
-    return null;
+  /**
+   * Creates a one time pad (2D byte array) consisting of chunks. The chunks are meant for single
+   * use encryption of the individual messages while the pad serves as unit for pretection of a
+   * communication.
+   *
+   * @return OneTimePad object holding the requested amount of chunks and size.
+   */
+  public static OneTimePad generatePad(String[] parties) {
+    return generatePad(ONE_TIME_PAD_SIZE, CHUNK_SIZE, parties);
   }
+
+  /**
+   * Overloaded variant of generatePad that allows for customized amount of chunks and chunk size
+   * used.
+   *
+   * @param padSize   as the amount of chunks to generate.
+   * @param chunkSize as the amount of bytes per generated chunk.
+   * @return OneTimePad object holding the requested amount of chunks and size.
+   */
+  public static OneTimePad generatePad(int padSize, int chunkSize, String[] parties) {
+
+
+    // Verfies all parties follow the "name@machine" syntax, and verifies the creator appears.
+    validateParties(parties);
+
+    // Create pad meta information
+    String timeStamp = new Date(System.currentTimeMillis()).toString();
+
+    // Generate the actual random chunks, form to a 2D byte array.
+    byte[][] padContent = new byte[padSize][];
+    for (int chunkId = 0; chunkId < padSize; chunkId++) {
+      padContent[chunkId] = generateChunk(chunkSize);
+    }
+
+    return new OneTimePad(timeStamp, parties, padContent);
+  }
+
+  /**
+   * Basic cheks to ensure the array of provided parties is sane. Each entry must follow "namme@machine" convention.
+   * @param parties
+   */
+  private static void validateParties(String[] parties) {
+    for (int i = 0; i < parties.length; i++) {
+      if(!parties[i].matches("[a-z|A-Z|\\-]+@[a-z|A-Z|\\-]+"))
+        throw new PadGeneratorException("Party \""+parties[i]+"\" does not follow \"name@machine\" convention.");
+    }
+  }
+
 
   /**
    * Helper function to create a new chunk of requested, filled with random content.

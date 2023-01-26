@@ -38,9 +38,6 @@ public class OneTimePadGeneratorTest {
     File expectedLocation = new File(System.getProperty("user.dir") + "/" + "otp-test");
     Assert.assertTrue("Created a test OTP target folder, but could not verify its existence.",
         expectedLocation.exists());
-
-    // Tidy up, so this does not affect any other tests or subsequent runs.
-//    removeTestFiles();
   }
 
   /**
@@ -85,10 +82,10 @@ public class OneTimePadGeneratorTest {
     removeTestFiles();
     File testOtpDir = OneTimePadGenerator.createOtpTargetDir("otp-test");
     byte[] testChunk = OneTimePadGenerator.generateChunk(8);
-    OneTimePadGenerator.persistChunk(testChunk, 1, testOtpDir);
+    OneTimePadGenerator.persistChunk(testChunk, 0, testOtpDir);
 
     // Verify existence of test chunk on disk
-    File testChunkFile = new File(testOtpDir + "/0001");
+    File testChunkFile = new File(testOtpDir + "/0000");
     Assert.assertTrue("Tested persistence of a test chunk, but the file cannot be found.",
         testChunkFile.exists());
 
