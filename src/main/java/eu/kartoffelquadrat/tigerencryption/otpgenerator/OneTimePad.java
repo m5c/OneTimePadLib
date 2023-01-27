@@ -1,8 +1,7 @@
 package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
-import java.sql.Date;
 import java.util.Arrays;
-import org.xml.sax.helpers.AttributesImpl;
+import java.util.Objects;
 
 /**
  * Immutable implementation of One Time Pad object. Cannot be changed once created. The one time pad
@@ -54,5 +53,27 @@ public class OneTimePad {
   public byte[] getChunkContent(int chunkId) {
     byte[] chunk = chunks[chunkId];
     return Arrays.copyOf(chunk, chunk.length);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OneTimePad that = (OneTimePad) o;
+    return Objects.equals(timeStamp, that.timeStamp) &&
+        Arrays.equals(parties, that.parties) &&
+        Arrays.deepEquals(chunks, that.chunks);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(timeStamp);
+    result = 31 * result + Arrays.hashCode(parties);
+    result = 31 * result + Arrays.hashCode(chunks);
+    return result;
   }
 }

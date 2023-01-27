@@ -50,7 +50,7 @@ public class OneTimePadTest {
     byte[] untamperedChunk = "BAR!".getBytes();
     OneTimePad pad = createSamplePad();
 
-    // Try to manipulate pad contens (Change "BAR!" to "BAZ!". Then Verify pad content is unchanged.
+    // Try to manipulate pad contents (Change "BAR!" to "BAZ!". Then Verify pad content is unchanged.
     pad.getChunkContent(1)[2] = "Z".getBytes()[0];
     boolean identical = Arrays.equals(untamperedChunk, pad.getChunkContent(1));
     Assert.assertTrue(

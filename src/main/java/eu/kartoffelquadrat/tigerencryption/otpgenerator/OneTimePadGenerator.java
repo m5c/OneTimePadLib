@@ -10,6 +10,8 @@ package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import java.io.File;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 
@@ -73,7 +76,7 @@ public class OneTimePadGenerator {
 
     // Store the one time pad on disk
     try {
-      String padSerialized = getGsonPadConverter().toJson(pad);
+      String padSerialized = OneTimePadSerializationTools.getGsonPadConverter().toJson(pad);
       FileUtils.writeStringToFile(location, padSerialized);
     } catch (IOException e) {
       throw new PadGeneratorException(e.getMessage());
@@ -81,9 +84,9 @@ public class OneTimePadGenerator {
 
     // Provide user feedback, if requested.
     if (verbose) {
-      System.out.println("Finished creation of One-Time-Pad.\nNext steps:\n"
-          + " - Replace the XXX in generated filename \"otp-XXX.json\" by a unique 3-digit number."
-          + " - Copy the outcome into the \".otp\" folder of all communicating end-devices.");
+      System.out.println("Finished creation of One-Time-Pad.\nNext steps:\n" +
+          " - Replace the XXX in generated filename \"otp-XXX.json\" by a unique 3-digit number." +
+          " - Copy the outcome into the \".otp\" folder of all communicating end-devices.");
     }
   }
 
@@ -138,6 +141,14 @@ public class OneTimePadGenerator {
    * @throws PadGeneratorException if one of the porivded parties does not follow convention.
    */
   private static void validateParties(String[] parties) throws PadGeneratorException {
+
+    // Verify there are parties
+    if (parties.length == 0) {
+      throw new PadGeneratorException(
+          "At least one name in format name@machine required as args[].");
+    }
+
+    // Verify all parties follow naming convention
     for (int i = 0; i < parties.length; i++) {
       if (!parties[i].matches("[a-z|A-Z|\\-]+@[a-z|A-Z|\\-]+")) {
         throw new PadGeneratorException(
@@ -158,22 +169,5 @@ public class OneTimePadGenerator {
     byte[] bytes = new byte[chunkSize];
     random.nextBytes(bytes);
     return bytes;
-  }
-
-  /**
-   * Returns a custom Gson deserializer/serializer that encodes byte codes in hexadecimal for
-   * improved readbility.
-   *
-   * @return Custom Gson object.
-   */
-  public static Gson getGsonPadConverter() {
-    // Gson de/serialization is overloaded, to store disk space (better compression of byte arrays
-    // contained in one time pad object)
-    // See: https://gist.github.com/orip/3635246?permalink_comment_id=2187632#gistcomment-2187632
-    GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(byte[].class,
-        (JsonSerializer<byte[]>) (src, typeOfSrc, context) -> new JsonPrimitive(
-            Hex.encodeHexString(src).toUpperCase()));
-    return builder.create();
   }
 }

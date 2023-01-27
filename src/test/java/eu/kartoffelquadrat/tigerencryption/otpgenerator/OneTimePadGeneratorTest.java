@@ -31,6 +31,14 @@ public class OneTimePadGeneratorTest {
   }
 
   /**
+   * Verifies refusal for empty parties.
+   */
+  @Test(expected = PadGeneratorException.class)
+  public void refuseNoParties() throws PadGeneratorException {
+    OneTimePadGenerator.generatePad(new String[]{});
+  }
+
+  /**
    * Verifies refusal of default otp location overwrites.
    */
   @Test(expected = PadGeneratorException.class)

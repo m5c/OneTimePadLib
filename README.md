@@ -68,9 +68,9 @@ There are two ways to use this software:
 You can change the amount of chunks per OTP and chunk length per OTP with these variables:
 
  * ```CHUNK_SIZE```: Length in bytes of message chunks. Shorter chunks have shown to be more robust against message tampering by communication relays. Notably email providers tend add linebreaks to longer lines.   
-Default is 512
+Default is 64
  * ```CHUNK_AMOUNT```: Total amount of chunks to create per OTP.  
-Default is 4096
+Default is 16*1024
 
 ## Author
 
