@@ -10,11 +10,10 @@ package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 /**
  * Custom Runtime Exception definition.
  */
-public class PadGeneratorException
-    extends RuntimeException {
+public class PadGeneratorException extends Throwable {
 
   /**
-   * Constructor for custom Runtime exception.
+   * Constructor for custom exception.
    *
    * @param cause as descritive text inticating the reason for exception.
    */

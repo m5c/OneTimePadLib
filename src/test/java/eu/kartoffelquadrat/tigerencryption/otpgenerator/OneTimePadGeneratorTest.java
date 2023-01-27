@@ -25,28 +25,18 @@ public class OneTimePadGeneratorTest {
   public void removeTestFiles() {
 
     // Tidy up, so this does not affect any other tests or subsequent runs.
-    File expectedLocation = new File(System.getProperty("user.dir") + "/" + "otp-test");
+    File expectedLocation = new File(System.getProperty("user.dir") + "/"
+        + "otp-XXX.json");
     expectedLocation.delete();
-  }
-
-  /**
-   * Verifies successful creation of OTP target directories at test location.
-   */
-  @Test
-  public void createOtpTargetDirTest() {
-    OneTimePadGenerator.createOtpTargetDir("otp-test");
-    File expectedLocation = new File(System.getProperty("user.dir") + "/" + "otp-test");
-    Assert.assertTrue("Created a test OTP target folder, but could not verify its existence.",
-        expectedLocation.exists());
   }
 
   /**
    * Verifies refusal of default otp location overwrites.
    */
-  @Test(expected = RuntimeException.class)
-  public void refuseOverwriteOtpTargetDirTest() {
-    OneTimePadGenerator.createOtpTargetDir("otp-test");
-    OneTimePadGenerator.createOtpTargetDir("otp-test");
+  @Test(expected = PadGeneratorException.class)
+  public void refuseOverwriteOtpTargetFileTest() throws PadGeneratorException, IOException {
+    new File(System.getProperty("user.dir") + "/" + "otp-XXX.json").createNewFile();
+    OneTimePadGenerator.main(new String[] {"Alice", "Bob"});
   }
 
   /**
@@ -73,23 +63,5 @@ public class OneTimePadGeneratorTest {
       identical &= chunk1[i] == chunk2[i];
     }
     Assert.assertFalse("Two generated test chunks were exactly identical.", identical);
-  }
-
-  @Test
-  public void persistChunkTest() throws IOException {
-
-    // Test creation of chunk
-    removeTestFiles();
-    File testOtpDir = OneTimePadGenerator.createOtpTargetDir("otp-test");
-    byte[] testChunk = OneTimePadGenerator.generateChunk(8);
-    OneTimePadGenerator.persistChunk(testChunk, 0, testOtpDir);
-
-    // Verify existence of test chunk on disk
-    File testChunkFile = new File(testOtpDir + "/0000");
-    Assert.assertTrue("Tested persistence of a test chunk, but the file cannot be found.",
-        testChunkFile.exists());
-
-    // Remove test chunk
-    testChunkFile.delete();
   }
 }

@@ -8,11 +8,17 @@
 
 package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.sql.Date;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.FileUtils;
+
 
 /**
  * Generator for one time pads. Per default each pad consists of 4096 chunks, each filled with 512
@@ -20,55 +26,64 @@ import java.sql.Date;
  */
 public class OneTimePadGenerator {
 
-  // number of bytes used as chunk size
-  private static final int CHUNK_SIZE = 512;
+  // number of bytes used as chunk size. Makes sense to keep this below 80 to prevent line break
+  // tampering by email providers.
+  private static final int CHUNK_SIZE = 64;
 
-  // total number of chunks to generate in a one time pad
-  private static final int ONE_TIME_PAD_SIZE = 4096;
+  // total number of chunks to generate in a one time pad. Keep this number high, so pad can be used
+  // for longer communication.
+  private static final int ONE_TIME_PAD_SIZE = 16 * 1024;
 
   // Name of the created target folder, storing all chunks
-  private static final String ONE_TIME_PAD_NAME = "otp-XXX";
+  private static final String ONE_TIME_PAD_NAME = "otp-XXX.json";
 
 
   /**
    * Main logic for creating a new One Time Pad and storing the contents on disk.
-   * TODO: persist OTP in JSON format + add a checksum file next to serialized otp.
    *
    * @param args none.
-   * @throws IOException in case persisting the one time pad to disk encounter an error.
+   * @throws PadGeneratorException in case persisting the one time pad to disk encounter an error.
    */
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws PadGeneratorException {
 
-    File otpTargetDir = createOtpTargetDir(ONE_TIME_PAD_NAME);
+    // Create target file object. Also verify the is not yet a pad thad would be erased
+    File otpTargetFile = new File(System.getProperty("user.dir") + "/" + ONE_TIME_PAD_NAME);
+    if (otpTargetFile.exists()) {
+      throw new PadGeneratorException("Target file \"" + ONE_TIME_PAD_NAME + "\" already exists.");
+    }
 
     // create the one time pad, consisting of many chunks for the individual messages.
     OneTimePad pad = generatePad(args);
 
-    // Store the one time pad on disk
-    for (int chunkId = 0; chunkId < pad.getChunkAmount(); chunkId++) {
-      persistChunk(pad.getChunkContent(chunkId), chunkId, otpTargetDir);
-    }
-
-
-    System.out.println("Finished creation of One-Time-Pad.\n"
-        + "Next steps:\n"
-        + " - Replace the XXX in the generated folder opt-XXX by a unique 3-digit number."
-        + " - Copy the outcome into the \".otp\" folder of all communicating end-devices.");
+    // Store pad on disk
+    persistPad(pad, otpTargetFile, true);
   }
 
   /**
-   * Safely creates the target directory for the new otp. This directory will contain all created
-   * chunks. Throws a runtimeException if the directory already exists.
+   * Helper function to persiste a previously created pas a JSON object on disk.
    *
-   * @param dirName as the name of the folder to create.
-   * @return File object pointing to the newly created otp target direcotry.
+   * @param pad      as the one time pad object.
+   * @param location as the target location on disk.
+   * @param verbose  as indicator whether user instructions should be printed to console.
+   * @throws PadGeneratorException in case the writer operation failed.
    */
-  protected static File createOtpTargetDir(String dirName) {
-    File otpTargetDir = new File(System.getProperty("user.dir") + "/" + dirName);
-    if (!otpTargetDir.mkdir()) {
-      throw new RuntimeException("Target directory \"" + ONE_TIME_PAD_NAME + "\" already exists.");
+  public static void persistPad(OneTimePad pad, File location, boolean verbose)
+      throws PadGeneratorException {
+
+    // Store the one time pad on disk
+    try {
+      String padSerialized = getGsonPadConverter().toJson(pad);
+      FileUtils.writeStringToFile(location, padSerialized);
+    } catch (IOException e) {
+      throw new PadGeneratorException(e.getMessage());
     }
-    return otpTargetDir;
+
+    // Provide user feedback, if requested.
+    if (verbose) {
+      System.out.println("Finished creation of One-Time-Pad.\nNext steps:\n"
+          + " - Replace the XXX in generated filename \"otp-XXX.json\" by a unique 3-digit number."
+          + " - Copy the outcome into the \".otp\" folder of all communicating end-devices.");
+    }
   }
 
   /**
@@ -78,8 +93,9 @@ public class OneTimePadGenerator {
    *
    * @param parties as sting array descripbing the names of all parties using this pad.
    * @return OneTimePad object holding the requested amount of chunks and size.
+   * @throws PadGeneratorException if one of the parties does not follow string convention.
    */
-  public static OneTimePad generatePad(String[] parties) {
+  public static OneTimePad generatePad(String[] parties) throws PadGeneratorException {
     return generatePad(ONE_TIME_PAD_SIZE, CHUNK_SIZE, parties);
   }
 
@@ -91,8 +107,10 @@ public class OneTimePadGenerator {
    * @param chunkSize as the amount of bytes per generated chunk.
    * @param parties   as sting array descripbing the names of all parties using this pad.
    * @return OneTimePad object holding the requested amount of chunks and size.
+   * @throws PadGeneratorException if one of the provided parties does not comply convention.
    */
-  public static OneTimePad generatePad(int padSize, int chunkSize, String[] parties) {
+  public static OneTimePad generatePad(int padSize, int chunkSize, String[] parties)
+      throws PadGeneratorException {
 
 
     // Verfies all parties follow the "name@machine" syntax, and verifies the creator appears.
@@ -115,8 +133,9 @@ public class OneTimePadGenerator {
    * "namme@machine" convention.
    *
    * @param parties as the array of individual OTP using parties.
+   * @throws PadGeneratorException if one of the porivded parties does not follow convention.
    */
-  private static void validateParties(String[] parties) {
+  private static void validateParties(String[] parties) throws PadGeneratorException {
     for (int i = 0; i < parties.length; i++) {
       if (!parties[i].matches("[a-z|A-Z|\\-]+@[a-z|A-Z|\\-]+")) {
         throw new PadGeneratorException(
@@ -127,7 +146,7 @@ public class OneTimePadGenerator {
 
 
   /**
-   * Helper function to create a new chunk of requested, filled with random content.
+   * Helper function to create a new chunk of requested size, filled with random content.
    *
    * @param chunkSize as the requested array length in bytes.
    * @return a byte array of the requested sie, filled with random content.
@@ -140,21 +159,19 @@ public class OneTimePadGenerator {
   }
 
   /**
-   * Stores a provided chunk on disk, into the folder belonging to the specified one-time-pad.
+   * Returns a custom Gson deserializer/serializer that encodes byte codes in hexadecimal for
+   * improved readbility.
    *
-   * @param chunk     as the random data to persist.
-   * @param chunkId   as index of the chunk to persist. Should be a number from 1-4069. The number
-   *                  will be used as filename, padded with leading zeroes as a four digit numner.
-   * @param targetDir as the target otp dir the new chunk file should be added to.
-   * @throws IOException in case writing to disk fails.
+   * @return Custom Gson object.
    */
-  protected static void persistChunk(byte[] chunk, int chunkId, File targetDir)
-      throws IOException {
-    String zeroPaddedChunkName = String.format("%04d", chunkId);
-    String pathBuilder = targetDir + "/" + zeroPaddedChunkName;
-    try (FileOutputStream fos = new FileOutputStream(pathBuilder)) {
-      fos.write(chunk);
-      fos.flush();
-    }
+  public static Gson getGsonPadConverter() {
+    // Gson de/serialization is overloaded, to store disk space (better compression of byte arrays
+    // contained in one time pad object)
+    // See: https://gist.github.com/orip/3635246?permalink_comment_id=2187632#gistcomment-2187632
+    GsonBuilder builder = new GsonBuilder();
+    builder.registerTypeAdapter(byte[].class,
+        (JsonSerializer<byte[]>) (src, typeOfSrc, context) -> new JsonPrimitive(
+            Hex.encodeHexString(src).toUpperCase()));
+    return builder.create();
   }
 }
