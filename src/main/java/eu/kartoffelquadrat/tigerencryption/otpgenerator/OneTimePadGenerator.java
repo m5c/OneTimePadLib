@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 
@@ -117,7 +118,8 @@ public class OneTimePadGenerator {
     validateParties(parties);
 
     // Create pad meta information
-    String timeStamp = new Date(System.currentTimeMillis()).toString();
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss");
+    String timeStamp = format.format(new Date(System.currentTimeMillis()));
 
     // Generate the actual random chunks, form to a 2D byte array.
     byte[][] padContent = new byte[padSize][];
