@@ -96,7 +96,6 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <finalName>OneTimePadLib</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
             </plugin>
 
@@ -142,6 +141,9 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <failOnWarnings>true</failOnWarnings>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

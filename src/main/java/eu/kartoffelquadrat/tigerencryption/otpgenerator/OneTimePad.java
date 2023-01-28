@@ -7,6 +7,8 @@ import java.util.Objects;
  * Immutable implementation of One Time Pad object. Cannot be changed once created. The one time pad
  * holds a series of chunks which are meant for single encryption use by a given communication
  * party.
+ *
+ * @author Maximilian Schiedermeier
  */
 public class OneTimePad {
   private final String timeStamp;
