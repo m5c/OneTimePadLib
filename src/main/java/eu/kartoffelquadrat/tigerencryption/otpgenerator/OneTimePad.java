@@ -27,6 +27,16 @@ public class OneTimePad {
   }
 
   /**
+   * Look up parties registered for this one time pad. Returns a deep copy to ensure integrity.
+   *
+   * @return String array containtn gthe names and assiciated machines of all parties using the pad.
+   */
+  public String[] getParties() {
+    return Arrays.copyOf(parties, parties.length);
+  }
+
+
+  /**
    * Getter to look up size per chunk in this one time pad. All chunks have identical size.
    *
    * @return integer telling the amount of chunks held in one time pad.
@@ -64,9 +74,9 @@ public class OneTimePad {
       return false;
     }
     OneTimePad that = (OneTimePad) o;
-    return Objects.equals(timeStamp, that.timeStamp) &&
-        Arrays.equals(parties, that.parties) &&
-        Arrays.deepEquals(chunks, that.chunks);
+    return Objects.equals(timeStamp, that.timeStamp)
+        && Arrays.equals(parties, that.parties)
+        && Arrays.deepEquals(chunks, that.chunks);
   }
 
   @Override

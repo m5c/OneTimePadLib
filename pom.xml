@@ -64,9 +64,6 @@
     </dependencies>
 
     <build>
-        <!-- Override default name of generated jars -->
-        <finalName>OtpGenerator</finalName>
-
         <plugins>
 
             <!-- Specify main class for exec goal -->
@@ -81,25 +78,28 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Build library with dependencies -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <mainClass>eu.kartoffelquadrat.tigerencryption.otpgenerator.OneTimePadGenerator</mainClass>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>OneTimePadLib</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
             </plugin>
 
-            <!-- specify main class for JAR manifest-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>eu.kartoffelquadrat.tigerencryption.otpgenerator.OneTimePadGenerator
-                            </mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
 
             <!-- Plugin to refuse build in case of checkstyle violations-->
             <plugin>
