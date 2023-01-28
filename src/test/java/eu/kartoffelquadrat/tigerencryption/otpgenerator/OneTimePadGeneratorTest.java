@@ -15,6 +15,9 @@ import org.junit.Test;
 
 public class OneTimePadGeneratorTest {
 
+  // Name used for the test pad.
+  private static final String TEST_PAD_NAME = "otp-test.json";
+
   /**
    * Automatic safety deletion of all test cache files, before and aver every test execution, to
    * ensure the tests have no cross dependencies and are not blemished by preceding failed tests and
@@ -26,16 +29,43 @@ public class OneTimePadGeneratorTest {
 
     // Tidy up, so this does not affect any other tests or subsequent runs.
     File expectedLocation = new File(System.getProperty("user.dir") + "/"
-        + "otp-XXX.json");
+        + TEST_PAD_NAME);
     expectedLocation.delete();
   }
+
+  /**
+   * Default use case for creation and persisting a one time pad to disk. Library users will most
+   * likely run simethign similar.
+   *
+   * @throws PadGeneratorException in case persisting the one time pad to disk encounter an error.
+   */
+  @Test
+  public void createAndPersistPadTest() throws  PadGeneratorException {
+
+    // Sample pad users
+    String[] parties = new String[]{"alice@luna", "bob@phobos"};
+
+    // Create target json file object. Also verify the is not yet a pad thad would be erased
+    File otpTargetFile = new File(System.getProperty("user.dir")
+        + "/" + TEST_PAD_NAME);
+    if (otpTargetFile.exists()) {
+      throw new PadGeneratorException("Target file \"" + TEST_PAD_NAME + "\" already exists.");
+    }
+
+    // create the one time pad, consisting of many chunks for the individual messages.
+    OneTimePad pad = OneTimePadGenerator.generatePad(parties);
+
+    // Store pad on disk
+    OneTimePadGenerator.persistPad(pad, otpTargetFile, true);
+  }
+
 
   /**
    * Verifies refusal for empty parties.
    */
   @Test(expected = PadGeneratorException.class)
   public void refuseNoParties() throws PadGeneratorException {
-    OneTimePadGenerator.generatePad(new String[]{});
+    OneTimePadGenerator.generatePad(new String[] {});
   }
 
   /**
@@ -43,8 +73,8 @@ public class OneTimePadGeneratorTest {
    */
   @Test(expected = PadGeneratorException.class)
   public void refuseOverwriteOtpTargetFileTest() throws PadGeneratorException, IOException {
-    new File(System.getProperty("user.dir") + "/" + "otp-XXX.json").createNewFile();
-    OneTimePadGenerator.main(new String[] {"Alice", "Bob"});
+    new File(System.getProperty("user.dir") + "/" + TEST_PAD_NAME).createNewFile();
+    createAndPersistPadTest();
   }
 
   /**

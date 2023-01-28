@@ -30,31 +30,6 @@ public class OneTimePadGenerator {
   // for longer communication.
   private static final int ONE_TIME_PAD_SIZE = 16 * 1024;
 
-  // Name of the created target folder, storing all chunks
-  private static final String ONE_TIME_PAD_NAME = "otp-XXX.json";
-
-
-  /**
-   * Main logic for creating a new One Time Pad and storing the contents on disk.
-   *
-   * @param args none.
-   * @throws PadGeneratorException in case persisting the one time pad to disk encounter an error.
-   */
-  public static void main(String[] args) throws PadGeneratorException {
-
-    // Create target file object. Also verify the is not yet a pad thad would be erased
-    File otpTargetFile = new File(System.getProperty("user.dir")
-        + "/" + ONE_TIME_PAD_NAME);
-    if (otpTargetFile.exists()) {
-      throw new PadGeneratorException("Target file \"" + ONE_TIME_PAD_NAME + "\" already exists.");
-    }
-
-    // create the one time pad, consisting of many chunks for the individual messages.
-    OneTimePad pad = generatePad(args);
-
-    // Store pad on disk
-    persistPad(pad, otpTargetFile, true);
-  }
 
   /**
    * Helper function to persiste a previously created pas a JSON object on disk.
@@ -78,7 +53,6 @@ public class OneTimePadGenerator {
     // Provide user feedback, if requested.
     if (verbose) {
       System.out.println("Finished creation of One-Time-Pad.\nNext steps:\n"
-          + " - Replace the XXX in generated filename \"otp-XXX.json\" by a unique 3-digit number."
           + " - Copy the outcome into the \".otp\" folder of all communicating end-devices.");
     }
   }
