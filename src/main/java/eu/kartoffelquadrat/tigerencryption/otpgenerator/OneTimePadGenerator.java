@@ -77,9 +77,9 @@ public class OneTimePadGenerator {
 
     // Provide user feedback, if requested.
     if (verbose) {
-      System.out.println("Finished creation of One-Time-Pad.\nNext steps:\n" +
-          " - Replace the XXX in generated filename \"otp-XXX.json\" by a unique 3-digit number." +
-          " - Copy the outcome into the \".otp\" folder of all communicating end-devices.");
+      System.out.println("Finished creation of One-Time-Pad.\nNext steps:\n"
+          + " - Replace the XXX in generated filename \"otp-XXX.json\" by a unique 3-digit number."
+          + " - Copy the outcome into the \".otp\" folder of all communicating end-devices.");
     }
   }
 
