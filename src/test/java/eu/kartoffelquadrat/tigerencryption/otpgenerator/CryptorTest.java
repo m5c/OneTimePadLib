@@ -35,4 +35,35 @@ public class CryptorTest {
     Assert.assertTrue("Produced crypted outcome differs from expected.",
         Arrays.equals(expectedOutcome, cryptedOutcome));
   }
+
+  /**
+   * Test for the stirn gpadding algorithm (fill up of message string to match chunk size by
+   * appending trailing whitespace characters.
+   *
+   * @throws CryptorException if the input string already exceeds the expected target length.
+   */
+  @Test
+  public void testPadString() throws CryptorException {
+    String unpaddedString = "foo";
+    String paddedString = Cryptor.padString(unpaddedString, 16);
+
+    Assert.assertEquals("Padding did not produce expected output length.", 16,
+        paddedString.length());
+
+    // Check the string is back to nromal if all trailing whitespaces removed.
+    Assert.assertEquals("Padded string was not only whitespace extension of original.",
+        paddedString.trim(), unpaddedString);
+  }
+
+  /**
+   * Padding test where the input already exceeds the expected target length. Reaching the target
+   * length by appending whitespaces is not possible and should result in a Cryptor Exception.
+   *
+   * @throws CryptorException as expected test outcome.
+   */
+  @Test(expected = CryptorException.class)
+  public void testOverlyLongPadString() throws CryptorException {
+    String unpaddedString = "foooooooooooooo";
+    Cryptor.padString(unpaddedString, 4);
+  }
 }

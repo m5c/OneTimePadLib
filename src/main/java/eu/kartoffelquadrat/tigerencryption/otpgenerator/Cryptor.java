@@ -1,7 +1,9 @@
 package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
 /**
- * Utils class for conversion of messages. Works both ways (encryption and decryption).
+ * Utils class for conversion of messages. Conversion works both ways since this is  a synmmetric
+ * encryption algorithm. Hence there is only a single method "crypt" for decryption and enryption
+ * of messages. *
  *
  * @author Maximilian Schiedermeier
  */
@@ -40,18 +42,18 @@ public class Cryptor {
    * plain String message that is shorter than a chunk, prior to calling the cryptor method.
    *
    * @param message as the original message,
-   * @param padding as expected output message size. Cannot be smaller than message length.
+   * @param targetLength as expected output message size. Cannot be smaller than message length.
    * @return padded message, with trailing whitespaces.
    * @throws CryptorException if the message is too long.
    */
-  public String padString(String message, int padding) throws CryptorException {
+  public static String padString(String message, int targetLength) throws CryptorException {
 
-    if (message.length() > padding) {
+    if (message.length() > targetLength) {
       throw new CryptorException(
-          "Message cannot be padded. It already exceeds the maximum padding size.");
+          "Message cannot be padded. It already exceeds the maximum targetLength size.");
     }
 
-    String paddingString = "%" + padding + "s";
+    String paddingString = "%" + targetLength + "s";
     return String.format(paddingString, message);
   }
 }

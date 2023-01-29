@@ -21,8 +21,26 @@ public class OneTimePadTest {
     byte[][] padContent = new byte[2][];
     padContent[0] = "FOO!".getBytes();
     padContent[1] = "BAR!".getBytes();
-    String[] parties = new String[]{"Bob", "Alice"};
+    String[] parties = new String[] {"Bob", "Alice"};
     return new OneTimePad("2023-01-01--12-02-28", parties, padContent);
+  }
+
+  /**
+   * Test verifies that the original pad content is not modified if retreived parties are modified.
+   * Pads are supposed to be immutable.
+   */
+  @Test
+  public void testPadPartyIntegrity() {
+
+    OneTimePad pad = createSamplePad();
+    String[] parties = pad.getParties();
+    parties[0] = "Eve";
+
+    // Get parties again and verify the position 0 is unchanged
+    parties = pad.getParties();
+    Assert.assertEquals(
+        "Pads should be immutatble but a test managed to change to contained parties.", parties[0],
+        "Bob");
   }
 
   /**
@@ -53,7 +71,6 @@ public class OneTimePadTest {
     // Try to manipulate pad contents (Change "BAR!" to "BAZ!". Then Verify pad content is unchanged.
     pad.getChunkContent(1)[2] = "Z".getBytes()[0];
     boolean identical = Arrays.equals(untamperedChunk, pad.getChunkContent(1));
-    Assert.assertTrue(
-        "Tampered with pad contents and the original pad has changed.", identical);
+    Assert.assertTrue("Tampered with pad contents and the original pad has changed.", identical);
   }
 }
