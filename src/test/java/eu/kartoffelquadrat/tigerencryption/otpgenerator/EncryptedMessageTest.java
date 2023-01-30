@@ -17,14 +17,16 @@ public class EncryptedMessageTest extends CommonTestUtils {
 
     // Create sample chops (as they would be created by cryptor)
     byte[][] sampleChops = new byte[2][];
-        sampleChops[0] = "toto".getBytes();
-        sampleChops[1] = "tata".getBytes();
+    sampleChops[0] = "toto".getBytes();
+    sampleChops[1] = "tata".getBytes();
 
     // Manually create an instance of Encrypted Message, without using Cryptor
     EncryptedMessage encMessage = new EncryptedMessage(testPad, 0, sampleChops);
 
     // Assert fields in encrypted message are correctly instantiated.
-    Assert.assertEquals("Amount of chops in encrypted message does not correspond to input parameters.", encMessage.getChopAmount(), 2);
+    Assert.assertEquals(
+        "Amount of chops in encrypted message does not correspond to input parameters.",
+        encMessage.getChopAmount(), 2);
 
 
   }
@@ -48,8 +50,34 @@ public class EncryptedMessageTest extends CommonTestUtils {
     // Verify the first is a hash, second is a zero padded index, the third is hexadecimal
     String[] lines = serializedPad.split(System.lineSeparator());
 
-    Assert.assertEquals("Produced message does not contain correct amount of chops", lines.length, 2);
-    Assert.assertEquals("Produced message lines do not containt 3 segments each", lines[0].split("-").length, 3);
-    Assert.assertEquals("Produced message lines do not containt 3 segments each", lines[1].split("-").length, 3);
+    Assert.assertEquals("Produced message does not contain correct amount of chops", lines.length,
+        2);
+    Assert.assertEquals("Produced message lines do not containt 3 segments each",
+        lines[0].split("-").length, 3);
+    Assert.assertEquals("Produced message lines do not containt 3 segments each",
+        lines[1].split("-").length, 3);
+
+    System.out.println(serializedPad);
   }
+
+  /**
+   * Test direct access to a aspecific indexed chop.
+   */
+  @Test
+  public void testChopAccess() {
+
+    OneTimePad testPad = createSamplePad();
+
+    // Create sample chops (as they would be created by cryptor)
+    byte[][] sampleChops = new byte[2][];
+    sampleChops[0] = "toto".getBytes();
+    sampleChops[1] = "tata".getBytes();
+
+    // Manually create an instance of Encrypted Message, without using Cryptor
+    EncryptedMessage encMessage = new EncryptedMessage(testPad, 0, sampleChops);
+
+    // retrieve second chop and verify it is identical, cannot be modified
+
+  }
+
 }
