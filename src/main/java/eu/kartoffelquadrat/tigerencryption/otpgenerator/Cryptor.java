@@ -2,12 +2,24 @@ package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
 /**
  * Utils class for conversion of messages. Conversion works both ways since this is  a synmmetric
- * encryption algorithm. Hence there is only a single method "crypt" for decryption and enryption
- * of messages. *
+ * encryption algorithm. Internaly it uses the same "cryptChunkSizedMethod" for decryption and
+ * enryption of messages.
  *
  * @author Maximilian Schiedermeier
  */
 public class Cryptor {
+
+  /**
+   * Decryptor method to cencrypt a plain message by applying a series of chunks.
+   *
+   * @param plainMessage
+   * @param pad
+   * @param nextFreeChunk
+   * @return
+   */
+  public static byte[][] encryptMessage(byte[] plainMessage, OneTimePad pad, int nextFreeChunk) {
+    return null;
+  }
 
   /**
    * Decryptor / Cryptor helper method implementation for a single message that is short enough to
@@ -19,7 +31,8 @@ public class Cryptor {
    * @return byte array representing the converted message.
    * @throws CryptorException in case the message is longer than the chunk size used.
    */
-  protected static byte[] crypt(byte[] message, byte[] chunk) throws CryptorException {
+  protected static byte[] cryptChunkSizedMessage(byte[] message, byte[] chunk)
+      throws CryptorException {
 
     // verify the message fits within a chunk of the provided pad
     if (message.length != chunk.length) {
@@ -41,7 +54,7 @@ public class Cryptor {
    * Helper method to pad a String with trailing whitespaces. Can be used to adjust the length of a
    * plain String message that is shorter than a chunk, prior to calling the cryptor method.
    *
-   * @param message as the original message,
+   * @param message      as the original message,
    * @param targetLength as expected output message size. Cannot be smaller than message length.
    * @return padded message, with trailing whitespaces.
    * @throws CryptorException if the message is too long.

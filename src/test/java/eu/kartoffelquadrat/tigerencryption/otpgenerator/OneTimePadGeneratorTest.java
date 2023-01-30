@@ -7,6 +7,7 @@
 package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import junit.framework.Assert;
 import org.junit.After;
@@ -27,10 +28,20 @@ public class OneTimePadGeneratorTest {
   @Before
   public void removeTestFiles() {
 
+    // Find all previously persisted one time pads
+    // See: https://stackoverflow.com/a/2102989
+    File dir = new File(System.getProperty("user.dir"));
+    File[] files = dir.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.endsWith(".otp");
+      }
+    });
+
     // Tidy up, so this does not affect any other tests or subsequent runs.
-    File expectedLocation = new File(System.getProperty("user.dir") + "/"
-        + TEST_PAD_NAME);
-    expectedLocation.delete();
+    for (File legacyOpt : files) {
+      legacyOpt.delete();
+    }
   }
 
   /**
@@ -40,20 +51,20 @@ public class OneTimePadGeneratorTest {
    * @throws PadGeneratorException in case persisting the one time pad to disk encounter an error.
    */
   @Test
-  public void createAndPersistPadTest() throws  PadGeneratorException {
+  public void createAndPersistPadTest() throws PadGeneratorException {
 
     // Sample pad users
-    String[] parties = new String[]{"alice@luna", "bob@phobos"};
-
-    // Create target json file object. Also verify the is not yet a pad thad would be erased
-    File otpTargetFile = new File(System.getProperty("user.dir")
-        + "/" + TEST_PAD_NAME);
-    if (otpTargetFile.exists()) {
-      throw new PadGeneratorException("Target file \"" + TEST_PAD_NAME + "\" already exists.");
-    }
+    String[] parties = new String[] {"alice@luna", "bob@phobos"};
 
     // create the one time pad, consisting of many chunks for the individual messages.
     OneTimePad pad = OneTimePadGenerator.generatePad(parties);
+
+    // Create target json file object. Also verify the is not yet a pad thad would be erased
+    File otpTargetFile = new File(System.getProperty("user.dir") + "/" + pad.getHash() + ".otp");
+    if (otpTargetFile.exists()) {
+      throw new PadGeneratorException(
+          "Target file \"" + pad.getHash() + ".otp" + "\" already exists.");
+    }
 
     // Store pad on disk
     OneTimePadGenerator.persistPad(pad, otpTargetFile, true);
@@ -66,15 +77,6 @@ public class OneTimePadGeneratorTest {
   @Test(expected = PadGeneratorException.class)
   public void refuseNoParties() throws PadGeneratorException {
     OneTimePadGenerator.generatePad(new String[] {});
-  }
-
-  /**
-   * Verifies refusal of default otp location overwrites.
-   */
-  @Test(expected = PadGeneratorException.class)
-  public void refuseOverwriteOtpTargetFileTest() throws PadGeneratorException, IOException {
-    new File(System.getProperty("user.dir") + "/" + TEST_PAD_NAME).createNewFile();
-    createAndPersistPadTest();
   }
 
   /**

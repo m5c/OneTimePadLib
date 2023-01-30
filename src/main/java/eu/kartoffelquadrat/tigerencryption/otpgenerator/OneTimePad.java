@@ -2,6 +2,8 @@ package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
 import java.util.Arrays;
 import java.util.Objects;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Immutable implementation of One Time Pad object. Cannot be changed once created. The one time pad
@@ -11,10 +13,15 @@ import java.util.Objects;
  * @author Maximilian Schiedermeier
  */
 public class OneTimePad {
+
+  // Indicates timestamp of creation
   private final String timeStamp;
 
   // First party is implicitly assumed creator
   private final String[] parties;
+
+  // Hash of parties and moment of creation. This is not to integrity portet the chunks, but to ensure the right otp ios referenced by encrypted messagtes
+  String hash;
   private final byte[][] chunks;
 
   /**
@@ -26,7 +33,29 @@ public class OneTimePad {
     this.chunks = chunks;
     this.parties = parties;
     this.timeStamp = timeStamp;
+    hash = computeCreationMD5(timeStamp, parties);
   }
+
+  private static String computeCreationMD5(String timeStamp, String[] parties) {
+
+    String concatIdentifier = timeStamp;
+    for (int i = 0; i < parties.length; i++) {
+      concatIdentifier += "-";
+      concatIdentifier += parties[i];
+    }
+    return Hex.encodeHexString(DigestUtils.md5(concatIdentifier)).toUpperCase();
+  }
+
+  /**
+   * Helper method to get the hash formed of creator name and time of creation string. Note that
+   * this hash does not cover the chunks.
+   *
+   * @return Hash of one time pad creation details.
+   */
+  public String getHash() {
+    return hash;
+  }
+
 
   /**
    * Look up parties registered for this one time pad. Returns a deep copy to ensure integrity.

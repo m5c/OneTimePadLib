@@ -23,14 +23,14 @@ public class CryptorTest {
     // Note: java encodes values [-128, 127] using Two complements (first bit is -128)
     // https://en.wikipedia.org/wiki/Two%27s_complement
 
-    // Illustration of Twos complement:
+    // Illustration of "Twos complement":
     // -128 = 10000000
     // 0 = 00000000
     // 127 = 01111111
     byte[] testMessage = new byte[] {-128, 0, 0, -1};
     byte[] testChunk = new byte[] {0, 127, 0, 0};
     byte[] expectedOutcome = new byte[] {-128, 127, 0, -1};
-    byte[] cryptedOutcome = Cryptor.crypt(testMessage, testChunk);
+    byte[] cryptedOutcome = Cryptor.cryptChunkSizedMessage(testMessage, testChunk);
 
     Assert.assertTrue("Produced crypted outcome differs from expected.",
         Arrays.equals(expectedOutcome, cryptedOutcome));

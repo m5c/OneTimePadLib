@@ -10,20 +10,7 @@ import java.util.Arrays;
 import junit.framework.Assert;
 import org.junit.Test;
 
-public class OneTimePadTest {
-
-  /**
-   * Manually creates a sample pad with 2 chunks, each holding 4 byte.
-   *
-   * @return OneTimePad ready for testing.
-   */
-  private OneTimePad createSamplePad() {
-    byte[][] padContent = new byte[2][];
-    padContent[0] = "FOO!".getBytes();
-    padContent[1] = "BAR!".getBytes();
-    String[] parties = new String[] {"Bob", "Alice"};
-    return new OneTimePad("2023-01-01--12-02-28", parties, padContent);
-  }
+public class OneTimePadTest extends CommonTestUtils {
 
   /**
    * Test verifies that the original pad content is not modified if retreived parties are modified.
