@@ -30,7 +30,7 @@ public class EncryptedMessageTest extends CommonTestUtils {
   }
 
   @Test
-  public void serialzieMessageTest() {
+  public void serializeMessageTest() {
 
     OneTimePad testPad = createSamplePad();
 
@@ -46,6 +46,10 @@ public class EncryptedMessageTest extends CommonTestUtils {
     String serializedPad = encMessage.serializeToHex();
 
     // Verify the first is a hash, second is a zero padded index, the third is hexadecimal
-    System.out.println(serializedPad);
+    String[] lines = serializedPad.split(System.lineSeparator());
+
+    Assert.assertEquals("Produced message does not contain correct amount of chops", lines.length, 2);
+    Assert.assertEquals("Produced message lines do not containt 3 segments each", lines[0].split("-").length, 3);
+    Assert.assertEquals("Produced message lines do not containt 3 segments each", lines[1].split("-").length, 3);
   }
 }

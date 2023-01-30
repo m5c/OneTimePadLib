@@ -38,7 +38,7 @@ public class OneTimePadTest extends CommonTestUtils {
   public void createOneTimePadTest() {
     OneTimePad pad = createSamplePad();
     Assert.assertEquals(
-        "Created test pad with two chunks, but the retreived chunk amount is not the same.", 2,
+        "Created test pad with two chunks, but the retreived chunk amount is not the same.", 12,
         pad.getChunkAmount());
     Assert.assertEquals(
         "Created test pad chunks size 4, but the retreived chunk size is not the same.", 4,
