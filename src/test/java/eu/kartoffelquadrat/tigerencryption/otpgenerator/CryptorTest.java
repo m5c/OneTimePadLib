@@ -10,7 +10,7 @@ import java.util.Arrays;
 import junit.framework.Assert;
 import org.junit.Test;
 
-public class CryptorTest {
+public class CryptorTest extends CommonTestUtils {
 
   /**
    * Verify the xor bitmask operation implemented for message encryption is correct.
@@ -65,5 +65,60 @@ public class CryptorTest {
   public void testOverlyLongPadString() throws CryptorException {
     String unpaddedString = "foooooooooooooo";
     Cryptor.padString(unpaddedString, 4);
+  }
+
+  @Test
+  public void testWhiteSpaceByteArrayGenerator() {
+    int expectedValue = 4;
+    byte[] whiteSpaceArray = Cryptor.getWhiteSpaceByteArray(expectedValue);
+    Assert.assertEquals("Generated array length differs from expected value.",
+        whiteSpaceArray.length, expectedValue);
+  }
+
+  @Test
+  public void testMessageChopper() {
+
+    byte[] testMessage = getSampleMessage();
+
+    // Chop test message
+    int chopSize = 16;
+    byte[][] choppedMessage = Cryptor.chop(testMessage, chopSize);
+
+    // Verify target lenght
+    int targetLength = testMessage.length / chopSize + (testMessage.length % chopSize == 0 ? 0 : 1);
+    Assert.assertEquals("Produced chopped array does not have target length.",
+        choppedMessage.length, targetLength);
+
+    // Verify all chops have equal size (16)
+    for (int i = 0; i < choppedMessage.length; i++) {
+      Assert.assertEquals("At least on entry in chopped message does not have expected length.",
+          choppedMessage[i].length, chopSize);
+    }
+
+    System.out.println("yay");
+  }
+
+  /**
+   * This tests verifies the encryption algorithm by applying the identity pad (pad with only zeroes
+   * on chunks) to a sample message. XOR with 0 always returns the original value, therefore the
+   * expact outcome is the original message.
+   */
+  @Test(expected = NullPointerException.class)
+  public void testEncryptMessageWithIdentityPad() throws CryptorException {
+
+    byte[] sampleMessage = getSampleMessage();
+    OneTimePad identityPad = createIdentityPad();
+
+    // Encrypt test message
+    EncryptedMessage encMessage = Cryptor.encryptMessage(sampleMessage, identityPad, 1);
+
+    // Verify the first chunk in enc message is identical to start of sample message
+    // 8 is the chunk size used in identity pad.
+    boolean startIsIdentical = Arrays.equals(Arrays.copyOf(sampleMessage, 8), encMessage.getChop(1));
+    Assert.assertTrue("Message encrypted with identity pad does not result in original.",
+        startIsIdentical);
+
+    // Verify access to the chunk 0 results in exception (not a key used in this pad)
+    encMessage.getChop(0);
   }
 }

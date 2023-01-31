@@ -1,5 +1,6 @@
 /**
  * Helper class with code used in several tests.
+ *
  * @author Maximilian Schiedermeier
  */
 
@@ -28,5 +29,22 @@ public class CommonTestUtils {
     padContent[11] = "!0-3".getBytes();
     String[] parties = new String[] {"Bob", "Alice"};
     return new OneTimePad("2023-01-01--12-02-28", parties, padContent);
+  }
+
+  protected byte[] getSampleMessage() {
+    // Create test message
+    return ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
+        "incididunt ut labore et dolore magna aliqua !!!").getBytes();
+  }
+
+  protected OneTimePad createIdentityPad() {
+
+    String time = "Now :)";
+    String[] parties = new String[] {"Alice", "Bob"};
+    byte[][] identityChunks = new byte[32][];
+    for (int i = 0; i < identityChunks.length; i++) {
+      identityChunks[i] = new byte[] {0, 0, 0, 0, 0, 0, 0, 0};
+    }
+    return new OneTimePad(time, parties, identityChunks);
   }
 }

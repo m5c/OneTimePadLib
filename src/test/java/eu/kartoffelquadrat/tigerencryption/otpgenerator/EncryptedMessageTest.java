@@ -6,6 +6,7 @@
 
 package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
+import java.util.Arrays;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -76,8 +77,11 @@ public class EncryptedMessageTest extends CommonTestUtils {
     // Manually create an instance of Encrypted Message, without using Cryptor
     EncryptedMessage encMessage = new EncryptedMessage(testPad, 0, sampleChops);
 
-    // retrieve second chop and verify it is identical, cannot be modified
-
+    // retrieve a chop and verify it is identical, cannot be modified
+    byte[] chop = encMessage.getChop(0);
+    chop[0] = "xxxx".getBytes()[0];
+    Assert.assertFalse("Attempted to modify encrypted message and was able to change immutable object.",
+        Arrays.equals(chop, encMessage.getChop(0)));
   }
 
 }
