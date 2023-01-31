@@ -2,6 +2,7 @@ package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.Set;
 import org.apache.commons.codec.binary.Hex;
 
 /**
@@ -18,15 +19,28 @@ public class EncryptedMessage {
   // chunk used for encryption, as well as the resulting byte array.
   private final LinkedHashMap<Integer, byte[]> choppedMessage = new LinkedHashMap<>();
 
-  // Reference to one time pad used for encryption. Forst 6 characters of OTP hash are used to identify the right pad.
+  // Reference to one time pad used for encryption. Forst 6 characters of OTP hash are used to
+  // identify the right pad.
   private final String otpHash;
 
   // Depending on amount of chunks usesd in pad, more padding might be needed.
   private final int maxPaddingLength;
 
+
+  // Field to store the chunk id to use for the next encryption.
+  private final int followUpChunkIndex;
+
+  /**
+   * Constructor for creation of an encrypted message bundle.
+   *
+   * @param pad             as the pad that was used for encryption.
+   * @param startChunkIndex as the first chunk id that was used for encryption.
+   * @param chops           as the actual encrypted message as 2D byte array.
+   */
   public EncryptedMessage(OneTimePad pad, int startChunkIndex, byte[][] chops) {
 
-    // The distance between two chunks used for encryption equals the amount of parties this pad was built for.
+    // Distance between two otp chunks used for consecutive message chops. This equals the amount
+    // of parties used in the pad.
     int chunkHop = pad.getParties().length;
 
     // Store hash of oth used
@@ -41,6 +55,7 @@ public class EncryptedMessage {
       choppedMessage.put(currentChunkIndex, chops[i]);
       currentChunkIndex += chunkHop;
     }
+    followUpChunkIndex = currentChunkIndex;
   }
 
   /**
@@ -49,8 +64,7 @@ public class EncryptedMessage {
    *
    * @param chunkId      as the number of the chunk used for encryption.
    * @param chunkPadding as the target length for padding the number with leading zeroes.
-   * @return a prefix string that can concatenated with a string representation of an encrypted
-   * message chop.
+   * @return a prefix string that can concatenated with representation of an encrypted message chop.
    */
   public String getPrefix(int chunkId, int chunkPadding) {
 
@@ -65,6 +79,15 @@ public class EncryptedMessage {
    */
   public int getChopAmount() {
     return choppedMessage.size();
+  }
+
+  /**
+   * Returns an int[] with the exact chunk Ids used for encryption.
+   *
+   * @return the chunk ids used for encryption.
+   */
+  public int[] getChunksUsed() {
+    return choppedMessage.keySet().stream().mapToInt(Integer::intValue).toArray();
   }
 
   /**
@@ -98,5 +121,15 @@ public class EncryptedMessage {
     }
 
     return hexSerializationBuilder.toString();
+  }
+
+  /**
+   * Helper method to tell which chunk id should be used as startChunkId for the next message
+   * encryption call to the cryptor class.
+   *
+   * @return next chunk id to use for encryption.
+   */
+  public int getFollowUpChunkIndex() {
+    return followUpChunkIndex;
   }
 }

@@ -16,10 +16,11 @@ public class Cryptor {
   /**
    * Decryptor method to cencrypt a plain message by applying a series of chunks.
    *
-   * @param plainMessage
-   * @param pad
-   * @param startChunkId
-   * @return
+   * @param plainMessage as the byte stream of the message to encrypt.
+   * @param pad          as the one time pad to use for encryption
+   * @param startChunkId as the index of the first chunk in the pad to use.
+   * @return a new Encrypted message object with the protected material.
+   * @throws CryptorException in case the message cannot be converted.
    */
   public static EncryptedMessage encryptMessage(byte[] plainMessage, OneTimePad pad,
                                                 int startChunkId) throws CryptorException {
@@ -48,7 +49,7 @@ public class Cryptor {
    * @param plainMessage byte array of the original message that may or may not fit into a series of
    *                     chunks.
    * @param chopSize     the target size for byte[] in the return array.
-   * @returna byte[][] where each element is guaranteed to have exactly the requested size.
+   * @return byte[][] where each element is guaranteed to have exactly the requested size.
    */
   protected static byte[][] chop(byte[] plainMessage, int chopSize) {
 
@@ -59,7 +60,8 @@ public class Cryptor {
     }
     byte[][] choppedMessage = new byte[targetChops][];
 
-    // Iterate over plainmessage and break into smaller byte[]s (except for last chunk, which needs extra handling)
+    // Iterate over plainmessage and break into smaller byte[]s (except for last chunk
+    // , which needs extra handling)
     for (int i = 0; i < targetChops - 1; i++) {
       choppedMessage[i] = Arrays.copyOfRange(plainMessage, i * chopSize, ((i + 1) * chopSize));
     }

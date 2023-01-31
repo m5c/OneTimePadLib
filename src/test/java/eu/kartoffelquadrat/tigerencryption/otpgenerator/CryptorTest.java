@@ -94,8 +94,6 @@ public class CryptorTest extends CommonTestUtils {
       Assert.assertEquals("At least on entry in chopped message does not have expected length.",
           choppedMessage[i].length, chopSize);
     }
-
-    System.out.println("yay");
   }
 
   /**
@@ -114,11 +112,50 @@ public class CryptorTest extends CommonTestUtils {
 
     // Verify the first chunk in enc message is identical to start of sample message
     // 8 is the chunk size used in identity pad.
-    boolean startIsIdentical = Arrays.equals(Arrays.copyOf(sampleMessage, 8), encMessage.getChop(1));
+    boolean startIsIdentical =
+        Arrays.equals(Arrays.copyOf(sampleMessage, 8), encMessage.getChop(1));
     Assert.assertTrue("Message encrypted with identity pad does not result in original.",
         startIsIdentical);
 
+    // Test serialization of pad top heaxdecimal representation
+    System.out.println(encMessage.serializeToHex());
+
     // Verify access to the chunk 0 results in exception (not a key used in this pad)
     encMessage.getChop(0);
+  }
+
+  /**
+   * Test to verify the chunk Ids used for consecutive encryption do not overlap.
+   */
+  @Test
+  public void testConsecutiveEncryption() throws CryptorException {
+
+    OneTimePad sampleOtp = createSamplePad();
+
+    String firstMessage = "The quick brown fox ";
+    byte[] firstMessageBytes = firstMessage.getBytes();
+    String secondMessage = "jumped over the lazy dog.";
+    byte[] secondMessageBytes = secondMessage.getBytes();
+
+    // Encrypt both messages
+    EncryptedMessage firstEncryptedMessage =
+        Cryptor.encryptMessage(firstMessageBytes, sampleOtp, 0);
+    EncryptedMessage secondEncryptedMessage = Cryptor.encryptMessage(secondMessageBytes, sampleOtp,
+        firstEncryptedMessage.getFollowUpChunkIndex());
+
+    // Debug output
+    System.out.println(firstEncryptedMessage.serializeToHex());
+    System.out.println(secondEncryptedMessage.serializeToHex());
+
+    // Verify the first chunkId used in the second pad is greater than the last chunk Id used in the first pad
+    int[] chunksOfFirstMessage = firstEncryptedMessage.getChunksUsed();
+    int highestChunkIdFirstMessage = chunksOfFirstMessage[chunksOfFirstMessage.length-1];
+    int[] chunksOfSecondMessage = secondEncryptedMessage.getChunksUsed();
+    int lowestChunkIdSecondMessage = chunksOfSecondMessage[0];
+
+    // Verify there is no overlap
+    Assert.assertTrue("The encrypted messages share common chunks!", highestChunkIdFirstMessage < lowestChunkIdSecondMessage);
+
+
   }
 }

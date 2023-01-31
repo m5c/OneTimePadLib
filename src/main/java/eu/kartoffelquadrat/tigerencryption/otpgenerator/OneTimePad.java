@@ -20,7 +20,8 @@ public class OneTimePad {
   // First party is implicitly assumed creator
   private final String[] parties;
 
-  // Hash of parties and moment of creation. This is not to integrity portet the chunks, but to ensure the right otp ios referenced by encrypted messagtes
+  // Hash of parties and moment of creation. This is not to integrity portet the chunks, but to
+  // ensure the right otp is referenced by encrypted messagtes.
   String hash;
   private final byte[][] chunks;
 
@@ -33,10 +34,10 @@ public class OneTimePad {
     this.chunks = chunks;
     this.parties = parties;
     this.timeStamp = timeStamp;
-    hash = computeCreationMD5(timeStamp, parties);
+    hash = computeCreationMessageDigest5(timeStamp, parties);
   }
 
-  private static String computeCreationMD5(String timeStamp, String[] parties) {
+  private static String computeCreationMessageDigest5(String timeStamp, String[] parties) {
 
     String concatIdentifier = timeStamp;
     for (int i = 0; i < parties.length; i++) {
@@ -105,8 +106,7 @@ public class OneTimePad {
       return false;
     }
     OneTimePad that = (OneTimePad) o;
-    return Objects.equals(timeStamp, that.timeStamp)
-        && Arrays.equals(parties, that.parties)
+    return Objects.equals(timeStamp, that.timeStamp) && Arrays.equals(parties, that.parties)
         && Arrays.deepEquals(chunks, that.chunks);
   }
 
