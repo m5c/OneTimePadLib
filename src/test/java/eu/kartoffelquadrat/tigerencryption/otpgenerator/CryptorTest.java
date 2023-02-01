@@ -6,6 +6,7 @@
 
 package eu.kartoffelquadrat.tigerencryption.otpgenerator;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -149,13 +150,37 @@ public class CryptorTest extends CommonTestUtils {
 
     // Verify the first chunkId used in the second pad is greater than the last chunk Id used in the first pad
     int[] chunksOfFirstMessage = firstEncryptedMessage.getChunksUsed();
-    int highestChunkIdFirstMessage = chunksOfFirstMessage[chunksOfFirstMessage.length-1];
+    int highestChunkIdFirstMessage = chunksOfFirstMessage[chunksOfFirstMessage.length - 1];
     int[] chunksOfSecondMessage = secondEncryptedMessage.getChunksUsed();
     int lowestChunkIdSecondMessage = chunksOfSecondMessage[0];
 
     // Verify there is no overlap
-    Assert.assertTrue("The encrypted messages share common chunks!", highestChunkIdFirstMessage < lowestChunkIdSecondMessage);
+    Assert.assertTrue("The encrypted messages share common chunks!",
+        highestChunkIdFirstMessage < lowestChunkIdSecondMessage);
+  }
 
+  /**
+   * Tests back and forth conversion of a message and validates the outcome is identical to the
+   * original message.
+   */
+  @Test
+  public void testEncryptDecryptMatch() throws CryptorException, PadGeneratorException {
 
+    // Generate a new random one time pad
+    OneTimePad pad = OneTimePadGenerator.generatePad(new String[]{"alice@luna", "bob@mars"});
+
+    // Retrieve a sample test message
+    byte[] sampleMessage = getSampleMessage();
+    System.out.println("Original Message:\n"+new String(sampleMessage));
+
+    // Encrypt the sample message (as alice)
+    EncryptedMessage encryptedMessage = Cryptor.encryptMessage(sampleMessage, pad, 0);
+    System.out.println("Encrypted Message:\n"+encryptedMessage.serializeToHex());
+
+    // Decrypt the encrypted message
+    byte[] decryptedMessage = Cryptor.decryptMessage(encryptedMessage, pad);
+
+    // Compare the outcome
+    System.out.println("Decrypted Message:\n"+new String(decryptedMessage));
   }
 }

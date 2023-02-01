@@ -19,6 +19,15 @@ public class EncryptedMessage {
   // chunk used for encryption, as well as the resulting byte array.
   private final LinkedHashMap<Integer, byte[]> choppedMessage = new LinkedHashMap<>();
 
+  /**
+   * Helper method to look up hash of the one time pad associated to this encrypted message.
+   *
+   * @return the one time pad hash registered for this encrypted message.
+   */
+  public String getOtpHash() {
+    return otpHash;
+  }
+
   // Reference to one time pad used for encryption. Forst 6 characters of OTP hash are used to
   // identify the right pad.
   private final String otpHash;

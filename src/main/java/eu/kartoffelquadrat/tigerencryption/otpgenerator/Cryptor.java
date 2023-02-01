@@ -43,6 +43,46 @@ public class Cryptor {
   }
 
   /**
+   * Counterpart for the exnrypt message method. Takes an encrypted message object and converts it
+   * back to a plain messae in form of single byte[] using the provided onte time pad.
+   *
+   * @param encryptedMessage as the message to decrypt.
+   * @param pad              as the pad that contains the key material needed for decryption.
+   * @return byte[] representing the decrypted message.
+   * @throws CryptorException in case the encrypted message and pad are not compatible.
+   */
+  public static byte[] decryptMessage(EncryptedMessage encryptedMessage, OneTimePad pad)
+      throws CryptorException {
+
+    // Verify the provided pad is the right key material
+    if (!encryptedMessage.getOtpHash().equals(pad.getHash())) {
+      throw new CryptorException(
+          "Message cannot be decrypted because the provided key material is not compatible.");
+    }
+
+    // Figure out how much space is needed for the result decrypted message
+    int[] chunksUsed = encryptedMessage.getChunksUsed();
+    int chunkSize = pad.getChunkSize();
+
+    // This list stores the individual byte chops of the decryptet message. It grows as we decrypt
+    // the individual chops of the encrypted message.
+    byte[] resultMessage = new byte[chunksUsed.length * chunkSize];
+
+    // Iterate over the indivial parts of the encrypted message, decrypt them, and add them to the
+    // chop list.
+    for (int i = 0; i < chunksUsed.length; i++) {
+      int chunkIndex = chunksUsed[i];
+      byte[] encryptedMessageChop = encryptedMessage.getChop(chunkIndex);
+      byte[] cryptoChunk = pad.getChunkContent(chunkIndex);
+      byte[] plainMessageChop =cryptChunkSizedMessage(encryptedMessageChop, cryptoChunk);
+      System.out.println(new String(plainMessageChop));
+      System.arraycopy(plainMessageChop, 0, resultMessage, i*chunkSize , chunkSize);
+    }
+
+    return resultMessage;
+  }
+
+  /**
    * Cuts a provided byte[] into smaller byte arrays that each have the requested size. The lase
    * chunk is filled up with whitespace bytes, to reach the requested size.
    *
