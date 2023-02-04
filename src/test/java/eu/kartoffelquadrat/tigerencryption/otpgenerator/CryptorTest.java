@@ -157,6 +157,23 @@ public class CryptorTest extends CommonTestUtils {
   }
 
   /**
+   * This tests attempts to encrypt a message that is longer than the remaining key material. The
+   * expected ebhaviour is refusal by the cryptor class with a OutOfChunksException thrown.
+   */
+  @Test(expected = OutOfChunksException.class)
+  public void testOutOfChunks() throws PadGeneratorException, CryptorException {
+
+    // Create a tiny one time pad
+    OneTimePad tinyPad =
+        OneTimePadGenerator.generatePad(2, 2, new String[] {"alice@luna", "bob@mars"});
+    // Create a long test message
+    byte[] longSampleMessage = getSampleMessage();
+
+    // Attempt encryption. Should fail, because there are not enough chunks in the pad.
+    Cryptor.encryptMessage(longSampleMessage, tinyPad, 0);
+  }
+
+  /**
    * Tests back and forth conversion of a message and validates the outcome is identical to the
    * original message.
    */
@@ -164,7 +181,7 @@ public class CryptorTest extends CommonTestUtils {
   public void testEncryptDecryptMatch() throws CryptorException, PadGeneratorException {
 
     // Generate a new random one time pad
-    OneTimePad pad = OneTimePadGenerator.generatePad(new String[]{"alice@luna", "bob@mars"});
+    OneTimePad pad = OneTimePadGenerator.generatePad(new String[] {"alice@luna", "bob@mars"});
 
     // Retrieve a sample test message
     byte[] sampleMessage = getSampleMessage();
@@ -176,6 +193,7 @@ public class CryptorTest extends CommonTestUtils {
     byte[] decryptedMessage = Cryptor.decryptMessage(encryptedMessage, pad, true);
 
     // Compare the outcome
-    Assert.assertEquals("Decrypted message is not equal to original!", new String(sampleMessage).trim(), new String(decryptedMessage));
+    Assert.assertEquals("Decrypted message is not equal to original!",
+        new String(sampleMessage).trim(), new String(decryptedMessage));
   }
 }

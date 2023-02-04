@@ -178,7 +178,7 @@ public class Cryptor {
    * @return padded message, with trailing whitespaces.
    * @throws CryptorException if the message is too long.
    */
-  public static String padString(String message, int targetLength) throws CryptorException {
+  protected static String padString(String message, int targetLength) throws CryptorException {
 
     if (message.length() > targetLength) {
       throw new CryptorException(
