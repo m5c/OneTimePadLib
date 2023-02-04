@@ -91,8 +91,16 @@ public class OneTimePad {
    *
    * @param chunkId as index of the target chunk in the One Time Pad.
    * @return byte array holding copy of requested chunk contents.
+   * @throws OutOfChunksException if the requests index exceeds the stored chunk array.
    */
-  public byte[] getChunkContent(int chunkId) {
+  public byte[] getChunkContent(int chunkId) throws OutOfChunksException {
+
+    // Verify the requested index exists. Throw custom exception otherwise.
+    if (chunkId >= chunks.length) {
+      throw new OutOfChunksException("Chunk with id " + chunkId
+          + " cannot be retrieved because the one time pad was exceeded.");
+    }
+
     byte[] chunk = chunks[chunkId];
     return Arrays.copyOf(chunk, chunk.length);
   }

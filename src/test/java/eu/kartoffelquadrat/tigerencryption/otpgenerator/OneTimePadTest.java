@@ -50,7 +50,7 @@ public class OneTimePadTest extends CommonTestUtils {
    * ensures that tampering with a retrieved pad does not alter the original.
    */
   @Test
-  public void ensureIntegrityTest() {
+  public void ensureIntegrityTest() throws OutOfChunksException {
 
     byte[] untamperedChunk = "BAR!".getBytes();
     OneTimePad pad = createSamplePad();

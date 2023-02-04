@@ -32,10 +32,6 @@ public class EncryptedMessage {
   // identify the right pad.
   private final String otpHash;
 
-  // Depending on amount of chunks usesd in pad, more padding might be needed.
-//  private final int maxPaddingLength;
-
-
   // Field to store the chunk id to use for the next encryption.
   private final int followUpChunkIndex;
 
