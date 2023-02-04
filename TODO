@@ -3,11 +3,15 @@ Documentation / how to use section / terminilogy (chops/chunks/pads/hashes) / Pi
 -chop - a message with exact size of chunk, can be encrypted or not.
 
 missing functionality
-- storage of bundled encrypted messages as object + convenient method to get next chunk for encryption. Maybe even append message method?
-- serializeation of buneld encrypted messages for chat history purposes
+- serializeation of bundles encrypted messages for chat history purposes
 - deserialization of bundled encrypted messages for load chat history purposes
 - OTP deserialize option
 
 Create a test where the OTP runs out of chunks (encryption and decryption)
 
-To be removed: storage to disk of otp ( it think it already is only used in tests.)
+
+Instructions for library users
+
+generating pads
+encrypting messages, follow up indexes
+storing / persisting conversations

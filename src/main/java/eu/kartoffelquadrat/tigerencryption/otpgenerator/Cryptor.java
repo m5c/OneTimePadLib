@@ -48,11 +48,12 @@ public class Cryptor {
    *
    * @param encryptedMessage as the message to decrypt.
    * @param pad              as the pad that contains the key material needed for decryption.
+   * @param text             inidcator that the content is text and should be trimmed.
    * @return byte[] representing the decrypted message.
    * @throws CryptorException in case the encrypted message and pad are not compatible.
    */
-  public static byte[] decryptMessage(EncryptedMessage encryptedMessage, OneTimePad pad)
-      throws CryptorException {
+  public static byte[] decryptMessage(EncryptedMessage encryptedMessage, OneTimePad pad,
+                                      boolean text) throws CryptorException {
 
     // Verify the provided pad is the right key material
     if (!encryptedMessage.getOtpHash().equals(pad.getHash())) {
@@ -76,6 +77,11 @@ public class Cryptor {
       byte[] cryptoChunk = pad.getChunkContent(chunkIndex);
       byte[] plainMessageChop = cryptChunkSizedMessage(encryptedMessageChop, cryptoChunk);
       System.arraycopy(plainMessageChop, 0, resultMessage, i * chunkSize, chunkSize);
+    }
+
+    // Trim the result if indicated as string payload
+    if (text) {
+      return new String(resultMessage).trim().getBytes();
     }
 
     return resultMessage;

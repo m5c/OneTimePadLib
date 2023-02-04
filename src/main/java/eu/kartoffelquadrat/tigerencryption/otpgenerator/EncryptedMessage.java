@@ -33,11 +33,14 @@ public class EncryptedMessage {
   private final String otpHash;
 
   // Depending on amount of chunks usesd in pad, more padding might be needed.
-  private final int maxPaddingLength;
+//  private final int maxPaddingLength;
 
 
   // Field to store the chunk id to use for the next encryption.
   private final int followUpChunkIndex;
+
+  // Stores the amount of digits needed to index all the pads chunks.
+  private final int chunkIndexDigits;
 
   /**
    * Constructor for creation of an encrypted message bundle.
@@ -55,8 +58,8 @@ public class EncryptedMessage {
     // Store hash of oth used
     otpHash = pad.getHash();
 
-    // We will never need more padding there are digits in the max amount of chunks.
-    maxPaddingLength = Integer.toString(pad.getChunkAmount()).length();
+    // We will never need more padding there are digits than there are needed to index the chunks.
+    chunkIndexDigits = Integer.toString(pad.getChunkAmount()).length();
 
     // Store received chops in internal map
     int currentChunkIndex = startChunkIndex;
@@ -123,7 +126,7 @@ public class EncryptedMessage {
 
     // for each chop, append prefix + serialization + newline
     for (int chopKey : choppedMessage.keySet()) {
-      hexSerializationBuilder.append(getPrefix(chopKey, maxPaddingLength));
+      hexSerializationBuilder.append(getPrefix(chopKey, chunkIndexDigits));
       String hexSerializedChop = Hex.encodeHexString(choppedMessage.get(chopKey)).toUpperCase();
       hexSerializationBuilder.append(hexSerializedChop);
       hexSerializationBuilder.append("\n");

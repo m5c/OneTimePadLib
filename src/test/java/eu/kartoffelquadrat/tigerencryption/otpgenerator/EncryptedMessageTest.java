@@ -83,5 +83,4 @@ public class EncryptedMessageTest extends CommonTestUtils {
     Assert.assertFalse("Attempted to modify encrypted message and was able to change immutable object.",
         Arrays.equals(chop, encMessage.getChop(0)));
   }
-
 }

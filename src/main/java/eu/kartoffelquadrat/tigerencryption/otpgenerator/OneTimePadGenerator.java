@@ -44,7 +44,7 @@ public class OneTimePadGenerator {
 
     // Store the one time pad on disk
     try {
-      String padSerialized = OneTimePadSerializationTools.getGsonPadConverter().toJson(pad);
+      String padSerialized = SerializationTools.getGsonPadConverter().toJson(pad);
       FileUtils.writeStringToFile(location, padSerialized);
     } catch (IOException e) {
       throw new PadGeneratorException(e.getMessage());

@@ -22,7 +22,7 @@ import org.apache.commons.codec.binary.Hex;
  * Util class with a single public method that provides Gson object for conventient One Time Pad
  * handling.
  */
-public class OneTimePadSerializationTools {
+public class SerializationTools {
 
 
   /**
@@ -41,7 +41,7 @@ public class OneTimePadSerializationTools {
             Hex.encodeHexString(src).toUpperCase()));
     builder.registerTypeAdapter(byte[].class,
         (JsonDeserializer<byte[]>) (json, typeOfT, context) -> decodeOtpJsonBytes(json));
-    return builder.create();
+    return builder.setPrettyPrinting().create();
   }
 
   /**

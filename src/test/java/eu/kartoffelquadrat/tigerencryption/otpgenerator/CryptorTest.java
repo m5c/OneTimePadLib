@@ -173,9 +173,9 @@ public class CryptorTest extends CommonTestUtils {
     EncryptedMessage encryptedMessage = Cryptor.encryptMessage(sampleMessage, pad, 0);
 
     // Decrypt the encrypted message
-    byte[] decryptedMessage = Cryptor.decryptMessage(encryptedMessage, pad);
+    byte[] decryptedMessage = Cryptor.decryptMessage(encryptedMessage, pad, true);
 
     // Compare the outcome
-    Assert.assertEquals("Decrypted message is not equal to original!", new String(sampleMessage).trim(), new String(decryptedMessage).trim());
+    Assert.assertEquals("Decrypted message is not equal to original!", new String(sampleMessage).trim(), new String(decryptedMessage));
   }
 }
