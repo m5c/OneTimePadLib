@@ -74,8 +74,8 @@ public class Cryptor {
       int chunkIndex = chunksUsed[i];
       byte[] encryptedMessageChop = encryptedMessage.getChop(chunkIndex);
       byte[] cryptoChunk = pad.getChunkContent(chunkIndex);
-      byte[] plainMessageChop =cryptChunkSizedMessage(encryptedMessageChop, cryptoChunk);
-      System.arraycopy(plainMessageChop, 0, resultMessage, i*chunkSize , chunkSize);
+      byte[] plainMessageChop = cryptChunkSizedMessage(encryptedMessageChop, cryptoChunk);
+      System.arraycopy(plainMessageChop, 0, resultMessage, i * chunkSize, chunkSize);
     }
 
     return resultMessage;

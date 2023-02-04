@@ -27,6 +27,8 @@ public class CommonTestUtils {
     padContent[9] = "FRWD".getBytes();
     padContent[10] = "0378".getBytes();
     padContent[11] = "!0-3".getBytes();
+    padContent[10] = "nope".getBytes();
+    padContent[11] = "yaya".getBytes();
     String[] parties = new String[] {"Bob", "Alice"};
     return new OneTimePad("2023-01-01--12-02-28", parties, padContent);
   }

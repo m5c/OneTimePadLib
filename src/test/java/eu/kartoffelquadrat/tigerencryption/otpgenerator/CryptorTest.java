@@ -130,9 +130,9 @@ public class CryptorTest extends CommonTestUtils {
 
     OneTimePad sampleOtp = createSamplePad();
 
-    String firstMessage = "The quick brown fox ";
+    String firstMessage = "The quick ";
     byte[] firstMessageBytes = firstMessage.getBytes();
-    String secondMessage = "jumped over the lazy dog.";
+    String secondMessage = "brown fox.";
     byte[] secondMessageBytes = secondMessage.getBytes();
 
     // Encrypt both messages
