@@ -108,7 +108,7 @@ public class Cryptor {
     // Copy the remainder (may not be exactly of chunkSize, so we copy the bytes individually)
     // Initialize with whitespace.
     byte[] plainMessageRemainder =
-        Arrays.copyOfRange(plainMessage, (targetChops - 1) * chopSize, plainMessage.length - 1);
+        Arrays.copyOfRange(plainMessage, (targetChops - 1) * chopSize, plainMessage.length);
     byte[] lastChop = getWhiteSpaceByteArray(chopSize);
     for (int i = 0; i < plainMessageRemainder.length; i++) {
       lastChop[i] = plainMessageRemainder[i];
