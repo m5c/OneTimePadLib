@@ -33,7 +33,7 @@ public class Cryptor {
 
     // encrypt every message chunk and append to list of encrypted messages
     int currentChunkId = startChunkId;
-    int hopSize = startChunkId % pad.getParties().length;
+    int hopSize = pad.getParties().length;
     for (int i = 0; i < messageChops.length; i++) {
       encryptedMessageChops[i] =
           cryptChunkSizedMessage(messageChops[i], pad.getChunkContent(currentChunkId));
@@ -75,7 +75,6 @@ public class Cryptor {
       byte[] encryptedMessageChop = encryptedMessage.getChop(chunkIndex);
       byte[] cryptoChunk = pad.getChunkContent(chunkIndex);
       byte[] plainMessageChop =cryptChunkSizedMessage(encryptedMessageChop, cryptoChunk);
-      System.out.println(new String(plainMessageChop));
       System.arraycopy(plainMessageChop, 0, resultMessage, i*chunkSize , chunkSize);
     }
 

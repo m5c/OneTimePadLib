@@ -118,9 +118,6 @@ public class CryptorTest extends CommonTestUtils {
     Assert.assertTrue("Message encrypted with identity pad does not result in original.",
         startIsIdentical);
 
-    // Test serialization of pad top heaxdecimal representation
-    System.out.println(encMessage.serializeToHex());
-
     // Verify access to the chunk 0 results in exception (not a key used in this pad)
     encMessage.getChop(0);
   }
@@ -171,16 +168,14 @@ public class CryptorTest extends CommonTestUtils {
 
     // Retrieve a sample test message
     byte[] sampleMessage = getSampleMessage();
-    System.out.println("Original Message:\n"+new String(sampleMessage));
 
     // Encrypt the sample message (as alice)
     EncryptedMessage encryptedMessage = Cryptor.encryptMessage(sampleMessage, pad, 0);
-    System.out.println("Encrypted Message:\n"+encryptedMessage.serializeToHex());
 
     // Decrypt the encrypted message
     byte[] decryptedMessage = Cryptor.decryptMessage(encryptedMessage, pad);
 
     // Compare the outcome
-    System.out.println("Decrypted Message:\n"+new String(decryptedMessage));
+    Assert.assertEquals("Decrypted message is not equal to original!", new String(sampleMessage).trim(), new String(decryptedMessage).trim());
   }
 }
