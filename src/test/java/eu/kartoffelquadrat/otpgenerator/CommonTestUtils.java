@@ -8,6 +8,11 @@ package eu.kartoffelquadrat.otpgenerator;
 
 public class CommonTestUtils {
 
+  protected OneTimePad createRealisticPad() throws PadGeneratorException {
+    String[] parties = new String[] {"alice@luna", "bob@mars", "alice@phobos", "bob@titan"};
+    return OneTimePadGenerator.generatePad(parties);
+  }
+
   /**
    * Manually creates a sample pad with 2 chunks, each holding 4 byte.
    *
@@ -35,8 +40,8 @@ public class CommonTestUtils {
 
   protected byte[] getSampleMessageBytes() {
     // Create test message
-    return ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
-        "incididunt ut labore et dolore magna aliqua !!!").getBytes();
+    return ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
+        + "incididunt ut labore et dolore magna aliqua !!!").getBytes();
   }
 
   protected OneTimePad createIdentityPad() {
