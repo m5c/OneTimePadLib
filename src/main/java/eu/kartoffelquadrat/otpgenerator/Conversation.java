@@ -8,9 +8,9 @@
 package eu.kartoffelquadrat.otpgenerator;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Collections;
 
 /**
  * Main access point for library users. Using this class lets you conveniently add new messages to a
