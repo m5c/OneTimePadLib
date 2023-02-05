@@ -10,6 +10,7 @@ package eu.kartoffelquadrat.otpgenerator;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -117,6 +118,16 @@ public class PlainMessage {
     return message;
   }
 
+  /**
+   * Similar to previous method but attempts to convert the payload byte array to a readable string
+   * representation.
+   *
+   * @return string versino of payload.
+   */
+  public String getPayloadAsString() {
+    return new String(message);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -125,9 +136,11 @@ public class PlainMessage {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
+
+    // time stamp is excluded on purpose.
     PlainMessage that = (PlainMessage) o;
     return Objects.equals(author, that.author) && Objects.equals(machine, that.machine)
-        && Objects.equals(creation, that.creation) && Objects.equals(message, that.message);
+        && Arrays.equals(message, that.message);
   }
 
   @Override
