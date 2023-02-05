@@ -1,6 +1,6 @@
 package eu.kartoffelquadrat.otpgenerator;
 
-public class InvalidPartyException  extends CryptorException {
+public class InvalidPartyException extends CryptorException {
   /**
    * Constructor for custom exception.
    *
@@ -9,3 +9,4 @@ public class InvalidPartyException  extends CryptorException {
   public InvalidPartyException(String cause) {
     super(cause);
   }
+}

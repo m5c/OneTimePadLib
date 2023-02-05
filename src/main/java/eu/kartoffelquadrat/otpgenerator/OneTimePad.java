@@ -37,11 +37,31 @@ public class OneTimePad {
     hash = computeCreationMessageDigest5(timeStamp, parties);
   }
 
-  public int getStarterChunkIndexforParty(String party) {
+  /**
+   * Herlper method to look up the first chunk index to use by a party, for their first encrypted
+   * message in a conversation.
+   *
+   * @param party as the name@machine convention string to search for.
+   * @return index of the povided party, which can be used as chunk index for the first encrypted
+   * message by that party. Chunk ids for follow-up messages are retreived from the encrypted
+   * message objects.
+   * @throws InvalidPartyException if the porivded party is not associated to this one time pad.
+   */
+  public int getStarterChunkIndexforParty(String party) throws InvalidPartyException {
+
+    // Iterate over parties and search for provided string
+    for (int i = 0; i < parties.length; i++) {
+      if (parties[i].equals(party)) {
+        return i;
+      }
+    }
+
+    // if at end of array and no match, reject input
+    throw new InvalidPartyException(
+        "Index for provided party cannot be retrieved for they are not associated with this one time pad.");
+
 
     // Reject lookup if provided party is unknown
-    if(!Arrays.stream(parties).anyMatch(party::equals))
-      return
   }
 
   private static String computeCreationMessageDigest5(String timeStamp, String[] parties) {
@@ -104,8 +124,8 @@ public class OneTimePad {
 
     // Verify the requested index exists. Throw custom exception otherwise.
     if (chunkId >= chunks.length) {
-      throw new OutOfChunksException("Chunk with id " + chunkId
-          + " cannot be retrieved because the one time pad was exceeded.");
+      throw new OutOfChunksException("Chunk with id " + chunkId +
+          " cannot be retrieved because the one time pad was exceeded.");
     }
 
     byte[] chunk = chunks[chunkId];
@@ -121,8 +141,8 @@ public class OneTimePad {
       return false;
     }
     OneTimePad that = (OneTimePad) o;
-    return Objects.equals(timeStamp, that.timeStamp) && Arrays.equals(parties, that.parties)
-        && Arrays.deepEquals(chunks, that.chunks);
+    return Objects.equals(timeStamp, that.timeStamp) && Arrays.equals(parties, that.parties) &&
+        Arrays.deepEquals(chunks, that.chunks);
   }
 
   @Override

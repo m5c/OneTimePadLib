@@ -9,14 +9,14 @@ package eu.kartoffelquadrat.otpgenerator;
  */
 public interface Conversation {
 
-  getConversationHistory
+//  getConversationHistory
 
   /**
    * Adds an encrypted message to the internal store of conversations, encrypts the message and
    * @param encryptedMessage
    * @return
    */
-  String addEncryptedMessage(EncryptedMessage encryptedMessage);
+  PlainMessage addEncryptedMessage(EncryptedMessage encryptedMessage);
 
   /**
    * Returns a printable version of the full conversation. Internal messages are stored encrypted
