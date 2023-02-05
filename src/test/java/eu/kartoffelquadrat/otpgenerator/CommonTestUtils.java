@@ -33,7 +33,7 @@ public class CommonTestUtils {
     return new OneTimePad("2023-01-01--12-02-28", parties, padContent);
   }
 
-  protected byte[] getSampleMessage() {
+  protected byte[] getSampleMessageBytes() {
     // Create test message
     return ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
         "incididunt ut labore et dolore magna aliqua !!!").getBytes();

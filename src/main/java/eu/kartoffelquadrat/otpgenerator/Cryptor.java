@@ -14,17 +14,17 @@ public class Cryptor {
   /**
    * Decryptor method to cencrypt a plain message by applying a series of chunks.
    *
-   * @param plainMessage as the byte stream of the message to encrypt.
+   * @param message      as the message object whose payload to encrypt.
    * @param pad          as the one time pad to use for encryption
    * @param startChunkId as the index of the first chunk in the pad to use.
    * @return a new Encrypted message object with the protected material.
    * @throws CryptorException in case the message cannot be converted.
    */
-  public static EncryptedMessage encryptMessage(byte[] plainMessage, OneTimePad pad,
+  public static EncryptedMessage encryptMessage(PlainMessage message, OneTimePad pad,
                                                 int startChunkId) throws CryptorException {
 
     // Iterate in hops over the needed amount of chunks.
-    byte[][] messageChops = chop(plainMessage, pad.getChunkSize());
+    byte[][] messageChops = chop(message.getPayload(), pad.getChunkSize());
 
     // Create target array for encrypted messages payload.
     byte[][] encryptedMessageChops = new byte[messageChops.length][];
@@ -50,8 +50,8 @@ public class Cryptor {
    * @return byte[] representing the decrypted message.
    * @throws CryptorException in case the encrypted message and pad are not compatible.
    */
-  public static byte[] decryptMessage(EncryptedMessage encryptedMessage, OneTimePad pad,
-                                      boolean text) throws CryptorException {
+  public static PlainMessage decryptMessage(EncryptedMessage encryptedMessage, OneTimePad pad,
+                                            boolean text) throws CryptorException {
 
     // Verify the provided pad is the right key material
     if (!encryptedMessage.getOtpHash().equals(pad.getHash())) {
@@ -79,10 +79,13 @@ public class Cryptor {
 
     // Trim the result if indicated as string payload
     if (text) {
-      return new String(resultMessage).trim().getBytes();
+      resultMessage = new String(resultMessage).trim().getBytes();
     }
 
-    return resultMessage;
+    int partyId = encryptedMessage.getChunksUsed()[0] % pad.getPartyAmount();
+    String author = pad.getParties()[partyId].split("@")[0];
+    String machine = pad.getParties()[partyId].split("@")[1];
+    return new PlainMessage(author, machine, resultMessage);
   }
 
   /**

@@ -1,3 +1,9 @@
+/**
+ * Custom exception to indicate the library ran out of key material.
+ *
+ * @author Maximilian Schiedermeier
+ */
+
 package eu.kartoffelquadrat.otpgenerator;
 
 /**

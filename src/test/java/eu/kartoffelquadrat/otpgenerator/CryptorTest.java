@@ -78,7 +78,7 @@ public class CryptorTest extends CommonTestUtils {
   @Test
   public void testMessageChopper() {
 
-    byte[] testMessage = getSampleMessage();
+    byte[] testMessage = getSampleMessageBytes();
 
     // Chop test message
     int chopSize = 16;
@@ -104,7 +104,8 @@ public class CryptorTest extends CommonTestUtils {
   @Test(expected = NullPointerException.class)
   public void testEncryptMessageWithIdentityPad() throws CryptorException {
 
-    byte[] sampleMessage = getSampleMessage();
+    byte[] sampleMessageBytes = getSampleMessageBytes();
+    PlainMessage sampleMessage = new PlainMessage("alice", "luna", sampleMessageBytes);
     OneTimePad identityPad = createIdentityPad();
 
     // Encrypt test message
@@ -113,7 +114,7 @@ public class CryptorTest extends CommonTestUtils {
     // Verify the first chunk in enc message is identical to start of sample message
     // 8 is the chunk size used in identity pad.
     boolean startIsIdentical =
-        Arrays.equals(Arrays.copyOf(sampleMessage, 8), encMessage.getChop(1));
+        Arrays.equals(Arrays.copyOf(sampleMessage.getPayload(), 8), encMessage.getChop(1));
     Assert.assertTrue("Message encrypted with identity pad does not result in original.",
         startIsIdentical);
 
@@ -131,13 +132,16 @@ public class CryptorTest extends CommonTestUtils {
 
     String firstMessage = "The quick ";
     byte[] firstMessageBytes = firstMessage.getBytes();
+    PlainMessage firstPlainMessage = new PlainMessage("alice", "luna", firstMessageBytes);
     String secondMessage = "brown fox.";
     byte[] secondMessageBytes = secondMessage.getBytes();
+    PlainMessage secondPlainMessage = new PlainMessage("alice", "luna", secondMessageBytes);
+
 
     // Encrypt both messages
     EncryptedMessage firstEncryptedMessage =
-        Cryptor.encryptMessage(firstMessageBytes, sampleOtp, 0);
-    EncryptedMessage secondEncryptedMessage = Cryptor.encryptMessage(secondMessageBytes, sampleOtp,
+        Cryptor.encryptMessage(firstPlainMessage, sampleOtp, 0);
+    EncryptedMessage secondEncryptedMessage = Cryptor.encryptMessage(secondPlainMessage, sampleOtp,
         firstEncryptedMessage.getFollowUpChunkIndex());
 
     // Debug output
@@ -166,10 +170,11 @@ public class CryptorTest extends CommonTestUtils {
     OneTimePad tinyPad =
         OneTimePadGenerator.generatePad(2, 2, new String[] {"alice@luna", "bob@mars"});
     // Create a long test message
-    byte[] longSampleMessage = getSampleMessage();
+    byte[] longSampleMessage = getSampleMessageBytes();
+    PlainMessage longPlainMessage = new PlainMessage("alice", "luna", longSampleMessage);
 
     // Attempt encryption. Should fail, because there are not enough chunks in the pad.
-    Cryptor.encryptMessage(longSampleMessage, tinyPad, 0);
+    Cryptor.encryptMessage(longPlainMessage, tinyPad, 0);
   }
 
   /**
@@ -183,13 +188,14 @@ public class CryptorTest extends CommonTestUtils {
     OneTimePad pad = OneTimePadGenerator.generatePad(new String[] {"alice@luna", "bob@mars"});
 
     // Retrieve a sample test message
-    byte[] sampleMessage = getSampleMessage();
+    byte[] sampleMessage = getSampleMessageBytes();
+    PlainMessage samplePlainMessage = new PlainMessage("alice", "luna", sampleMessage);
 
     // Encrypt the sample message (as alice)
-    EncryptedMessage encryptedMessage = Cryptor.encryptMessage(sampleMessage, pad, 0);
+    EncryptedMessage encryptedMessage = Cryptor.encryptMessage(samplePlainMessage, pad, 0);
 
     // Decrypt the encrypted message
-    byte[] decryptedMessage = Cryptor.decryptMessage(encryptedMessage, pad, true);
+    byte[] decryptedMessage = Cryptor.decryptMessage(encryptedMessage, pad, true).getPayload();
 
     // Compare the outcome
     Assert.assertEquals("Decrypted message is not equal to original!",

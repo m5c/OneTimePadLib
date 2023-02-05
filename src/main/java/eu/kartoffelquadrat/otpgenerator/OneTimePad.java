@@ -21,8 +21,8 @@ public class OneTimePad {
   private final String[] parties;
 
   // Hash of parties and moment of creation. This is not to integrity portet the chunks, but to
-  // ensure the right otp is referenced by encrypted messagtes.
-  String hash;
+  // ensure the right otp is referenced by encrypted messages.
+  private final String hash;
   private final byte[][] chunks;
 
   /**
@@ -38,13 +38,21 @@ public class OneTimePad {
   }
 
   /**
+   * Helper m,ethod to determine whether a provided party is a associated to the one time pad.
+   *
+   * @param party as the party to test.
+   * @return true if the party is known, false otherwise.
+   */
+  public boolean isAssociatedParty(String party) {
+    return Arrays.stream(parties).anyMatch(party::equals);
+  }
+
+  /**
    * Herlper method to look up the first chunk index to use by a party, for their first encrypted
    * message in a conversation.
    *
    * @param party as the name@machine convention string to search for.
-   * @return index of the povided party, which can be used as chunk index for the first encrypted
-   * message by that party. Chunk ids for follow-up messages are retreived from the encrypted
-   * message objects.
+   * @return index of the povided party, can be used for the first encrypted message chunk.
    * @throws InvalidPartyException if the porivded party is not associated to this one time pad.
    */
   public int getStarterChunkIndexforParty(String party) throws InvalidPartyException {
@@ -58,7 +66,8 @@ public class OneTimePad {
 
     // if at end of array and no match, reject input
     throw new InvalidPartyException(
-        "Index for provided party cannot be retrieved for they are not associated with this one time pad.");
+        "Index for provided party cannot be retrieved for they are not associated with this one "
+            + "time pad.");
 
 
     // Reject lookup if provided party is unknown
@@ -124,8 +133,8 @@ public class OneTimePad {
 
     // Verify the requested index exists. Throw custom exception otherwise.
     if (chunkId >= chunks.length) {
-      throw new OutOfChunksException("Chunk with id " + chunkId +
-          " cannot be retrieved because the one time pad was exceeded.");
+      throw new OutOfChunksException("Chunk with id " + chunkId
+          + " cannot be retrieved because the one time pad was exceeded.");
     }
 
     byte[] chunk = chunks[chunkId];
@@ -141,8 +150,8 @@ public class OneTimePad {
       return false;
     }
     OneTimePad that = (OneTimePad) o;
-    return Objects.equals(timeStamp, that.timeStamp) && Arrays.equals(parties, that.parties) &&
-        Arrays.deepEquals(chunks, that.chunks);
+    return Objects.equals(timeStamp, that.timeStamp) && Arrays.equals(parties, that.parties)
+        && Arrays.deepEquals(chunks, that.chunks);
   }
 
   @Override
@@ -151,5 +160,14 @@ public class OneTimePad {
     result = 31 * result + Arrays.hashCode(parties);
     result = 31 * result + Arrays.hashCode(chunks);
     return result;
+  }
+
+  /**
+   * Helper method to look up how many parties share this one time pad.
+   *
+   * @return the amount of parties associated to this pad.
+   */
+  public int getPartyAmount() {
+    return parties.length;
   }
 }

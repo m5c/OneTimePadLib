@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"eu.kartoffelquadrat.tigerencryption.otpgenerator"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"eu.kartoffelquadrat.otpgenerator"}]

@@ -1,5 +1,7 @@
 /**
- * Helper class to bundle details and content of an unencrypted message.
+ * Helper class to bundle details and content of an unencrypted message. Note that a message is not
+ * necessarily textual. In the future this class is likely split inty multiple subclasses for non
+ * text content.
  *
  * @author Maximilian Schiedermeier
  */
@@ -29,8 +31,7 @@ public class PlainMessage {
   private final String creation;
 
   // The actual plain payload of the message
-  private final String message;
-
+  private final byte[] message;
 
   /**
    * Constructor without timestamp parameter. Automatically sets timestamp to now. Use this
@@ -41,34 +42,18 @@ public class PlainMessage {
    * @param message as the actual message payload.
    * @throws InvalidPartyException if the provided name or machine are useing non-alphabet chars.
    */
-  public PlainMessage(String author, String machine, String creation, String message)
-      throws InvalidPartyException {
+  public PlainMessage(String author, String machine, byte[] message) throws InvalidPartyException {
+
+    // Calls extended constructor with current time as creation timestamp.
+    this.creation =
+        new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss").format(new Date(System.currentTimeMillis()));
 
     // Verify author and machine contain not illegal characters (all lower, no non-alphanumerics)
     this.author = validate(author);
     this.machine = validate(machine);
 
-    this.creation = creation;
-
     // store the actual message.
     this.message = message;
-  }
-
-  /**
-   * Constructor without timestamp parameter. Automatically sets timestamp to now. Use this
-   * constructor if you want to add a new message to the conversation, manually.
-   *
-   * @param author  as the natural name of the message creator without spaces.
-   * @param machine as the client the author used while composing the message.
-   * @param message as the actual message payload.
-   * @throws InvalidPartyException if the provided name or machine are useing non-alphabet chars.
-   */
-  public PlainMessage(String author, String machine, String message) throws InvalidPartyException {
-
-    // Calls extended constructor with current time as creation timestamp.
-    this(author, machine,
-        new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss").format(new Date(System.currentTimeMillis())),
-        message);
   }
 
   /**
@@ -126,9 +111,9 @@ public class PlainMessage {
   /**
    * Getter for the message field.
    *
-   * @return the plain message payload string.
+   * @return the plain message payload.
    */
-  public String getMessage() {
+  public byte[] getPayload() {
     return message;
   }
 
