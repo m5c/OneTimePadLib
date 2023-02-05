@@ -6,7 +6,7 @@
  * @author Maximilian Schiedermeier
  */
 
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 import java.io.File;
 import java.io.IOException;

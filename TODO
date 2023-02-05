@@ -2,6 +2,15 @@ Documentation / how to use section / terminilogy (chops/chunks/pads/hashes) / Pi
 - chunk - a series of random noise within the one time pad.
 - chop - a message with exact size of chunk, can be encrypted or not.
 
+Create a conversation object. Either created from storage or set up new.
+ - constructor needs client-party, one-time pad. Should be only used to set up a new, empty conversation. (not necessarily same as creating a new one time pad.)
+- is branded to a sending party (associated party can add messages)
+- offers add encrypted message to conversation method (adds to internal storage and returns plain message)
+- offers add plain message (encrypts message, adds to internal storage and returns encrypted message - figures out by itself which chunk to use)
+ - Offer serialization method - return JSON string
+ - Offers deserializatio method (static) returns conversatino object.
+ - timestamp of creation for encrypted messages
+
 Instructions for library users:
 - generating pads, sample storing of pads
 - encrypting messages, follow up indexes

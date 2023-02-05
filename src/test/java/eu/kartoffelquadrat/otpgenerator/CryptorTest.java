@@ -4,9 +4,8 @@
  * @author Maximilian Schiedermeier
  */
 
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import junit.framework.Assert;
 import org.junit.Test;

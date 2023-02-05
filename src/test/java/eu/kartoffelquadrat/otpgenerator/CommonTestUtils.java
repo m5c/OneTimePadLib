@@ -4,7 +4,7 @@
  * @author Maximilian Schiedermeier
  */
 
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 public class CommonTestUtils {
 

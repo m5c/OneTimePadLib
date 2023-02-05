@@ -7,7 +7,7 @@
  * @author Maximilian Schiedermeier
  */
 
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

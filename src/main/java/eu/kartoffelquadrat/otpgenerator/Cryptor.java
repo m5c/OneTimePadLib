@@ -1,8 +1,6 @@
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Utils class for conversion of messages. Conversion works both ways since this is  a synmmetric

@@ -4,10 +4,9 @@
  * @author Maximilian Schiedermeier
  */
 
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 import com.google.gson.Gson;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import junit.framework.Assert;

@@ -1,4 +1,4 @@
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -35,6 +35,13 @@ public class OneTimePad {
     this.parties = parties;
     this.timeStamp = timeStamp;
     hash = computeCreationMessageDigest5(timeStamp, parties);
+  }
+
+  public int getStarterChunkIndexforParty(String party) {
+
+    // Reject lookup if provided party is unknown
+    if(!Arrays.stream(parties).anyMatch(party::equals))
+      return
   }
 
   private static String computeCreationMessageDigest5(String timeStamp, String[] parties) {

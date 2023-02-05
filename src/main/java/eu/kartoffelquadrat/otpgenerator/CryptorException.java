@@ -5,19 +5,19 @@
  * @author Maximilian Schiedermeier
  */
 
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 /**
- * Custom Runtime Exception definition.
+ * Custom Exception definition for generic failure situations throught encryption or decryption.
  */
-public class PadGeneratorException extends Throwable {
+public class CryptorException extends Throwable {
 
   /**
    * Constructor for custom exception.
    *
    * @param cause as descritive text inticating the reason for exception.
    */
-  public PadGeneratorException(String cause) {
+  public CryptorException(String cause) {
     super(cause);
   }
 }

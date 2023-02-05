@@ -4,11 +4,10 @@
  * @author Maximilian Schiedermeier
  */
 
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 /**
  * This exception is thrown if the library was requested to encrypt a message but, there are not

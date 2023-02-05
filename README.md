@@ -20,29 +20,41 @@ potential valid outcome.
 
 > (*) This library conceals the exact length of individual messages by whitespace padding.
 
-### Restrictions
+#### Restrictions
 
-Secure usage of one-time-pads is subject to several conditions. If not respected, the safety of
-individual messages is likely compromised.
+A secure use of one-time-pads is subject to several conditions. If not respected, the secrecy of
+transmitted messages may be compromised.
 
-* All communicating parties must use the same one-time-pad for the entire communication.
-* The one-time-pad must be exchanged in a secure manner, idelly the parties gather physically at the
-  moment of pad creation.
-* A crypto chunk (random byte series withing a pad) must never by used for more than one message.
+* All communicating parties must use the same one-time-pad for the entire communication.  
+However, the protection of encrypted messages is only as good as the way the one time pads have been exchanged.
+* A crypto chunk (random byte series withing a pad) must be never used for more than one message. Multi encryption of different messages, using the same one time pad chunk [opens gate to statistic attacks](https://www.douglas.stebila.ca/teaching/visual-one-time-pad/).  
+The library comes with functionality that tells client software which chunk should be used for the next encryption. See [usage](#usage) section.
+
+#### Recommendations for a secure use
+
+ * The one-time-pad must be exchanged in a secure manner, ideally the parties gather physically at the
+  moment of pad creation, for a secure transfer (Airdrop, Usb-Drive, LAN, etc...)
+ * Use unique chunks for every message encryption  
+Every one time pad is associated to a fixed set of communicating parties. Internally it and reserves a subset of the available chunks per party.  
+    * Use only the chunks belonging to your party for encryption. See [usage](#usage) section.
+    * Avoid double use of a chunk, by requesting follow-up indexes from the encrypted message object. See [usage](#usage) section.
+ * Register multiple end-clients as individual parties, to associate individual chunks to each of them.  
+This is why on pad creation, parties are always specified as a ```username``` + ```device``` bundle, e.g. ```max@desktop```.
+
 
 The library provides method signatures that forward a secure usage. For details see
 the [Usage](#usage) section
 
 ## Usage
 
-There are two ways to use this software:
+...
+
+## Installation
+
+There are two ways to use this library in client software:
 
 * As standalone program, to create *One Time Pads* and store them on disk for later use.
 * As library, to retrieve new *One Time Pads* as objects.
-
-## Installing the library
-
-The library can be used by gui clients or chat software as a maven dependency or direct JAR.
 
 ### Jar
 

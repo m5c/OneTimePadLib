@@ -1,8 +1,7 @@
-package eu.kartoffelquadrat.tigerencryption.otpgenerator;
+package eu.kartoffelquadrat.otpgenerator;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.Set;
 import org.apache.commons.codec.binary.Hex;
 
 /**
