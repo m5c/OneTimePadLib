@@ -58,10 +58,11 @@ public interface Conversation {
   /**
    * Returns a printable version of the full conversation. Internal messages are stored encrypted
    * and in an ASCII compatible hexcode representation.
+   * TODO this should NOT serialize the pad, only the series of encrypted messages.
    *
    * @return Json string representation of the conversation object.
    */
-  String serializeToJson();
+  String serializeEncryptedMessagesToJson();
 
   /**
    * Restores a previously exported conversation back to a java object. Useful for loading a
@@ -70,8 +71,9 @@ public interface Conversation {
    * @param serializedConversation as the Json String of the conversation to restore.
    * @return conversation as a java object.
    */
-  static Conversation deserializeFromJson(String serializedConversation) {
+  static Conversation recreate(String serializedEncryptedMessages, String party, OneTimePad oneTimePad) {
     return SerializationTools.getGsonPadConverter()
         .fromJson(serializedConversation, Conversation.class);
+    // TODO: figure out a way to recreate using only one time pad object and list of encrypted messages as input. (and maybe the using party)
   }
 }
