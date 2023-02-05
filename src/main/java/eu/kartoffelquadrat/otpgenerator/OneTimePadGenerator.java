@@ -30,33 +30,6 @@ public class OneTimePadGenerator {
   // for longer communication.
   private static final int ONE_TIME_PAD_SIZE = 16 * 1024;
 
-
-  /**
-   * Helper function to persiste a previously created pas a JSON object on disk.
-   *
-   * @param pad      as the one time pad object.
-   * @param location as the target location on disk.
-   * @param verbose  as indicator whether user instructions should be printed to console.
-   * @throws PadGeneratorException in case the writer operation failed.
-   */
-  public static void persistPad(OneTimePad pad, File location, boolean verbose)
-      throws PadGeneratorException {
-
-    // Store the one time pad on disk
-    try {
-      String padSerialized = SerializationTools.getGsonPadConverter().toJson(pad);
-      FileUtils.writeStringToFile(location, padSerialized);
-    } catch (IOException e) {
-      throw new PadGeneratorException(e.getMessage());
-    }
-
-    // Provide user feedback, if requested.
-    if (verbose) {
-      System.out.println("Finished creation of One-Time-Pad.\nNext steps:\n"
-          + " - Copy the outcome into the \".otp\" folder of all communicating end-devices.");
-    }
-  }
-
   /**
    * Creates a one time pad (2D byte array) consisting of chunks. The chunks are meant for single
    * use encryption of the individual messages while the pad serves as unit for pretection of a
@@ -131,7 +104,7 @@ public class OneTimePadGenerator {
    * @param chunkSize as the requested array length in bytes.
    * @return a byte array of the requested sie, filled with random content.
    */
-  public static byte[] generateChunk(int chunkSize) {
+  protected static byte[] generateChunk(int chunkSize) {
     SecureRandom random = new SecureRandom();
     byte[] bytes = new byte[chunkSize];
     random.nextBytes(bytes);

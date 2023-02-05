@@ -57,18 +57,7 @@ public class OneTimePadGeneratorTest {
 
     // create the one time pad, consisting of many chunks for the individual messages.
     OneTimePad pad = OneTimePadGenerator.generatePad(parties);
-
-    // Create target json file object. Also verify the is not yet a pad thad would be erased
-    File otpTargetFile = new File(System.getProperty("user.dir") + "/" + pad.getHash() + ".otp");
-    if (otpTargetFile.exists()) {
-      throw new PadGeneratorException(
-          "Target file \"" + pad.getHash() + ".otp" + "\" already exists.");
-    }
-
-    // Store pad on disk
-    OneTimePadGenerator.persistPad(pad, otpTargetFile, true);
   }
-
 
   /**
    * Verifies refusal for empty parties.

@@ -20,7 +20,7 @@ public class Cryptor {
    * @return a new Encrypted message object with the protected material.
    * @throws CryptorException in case the message cannot be converted.
    */
-  public static EncryptedMessage encryptMessage(PlainMessage message, OneTimePad pad,
+  protected static EncryptedMessage encryptMessage(PlainMessage message, OneTimePad pad,
                                                 int startChunkId) throws CryptorException {
 
     // Iterate in hops over the needed amount of chunks.
@@ -50,7 +50,7 @@ public class Cryptor {
    * @return byte[] representing the decrypted message.
    * @throws CryptorException in case the encrypted message and pad are not compatible.
    */
-  public static PlainMessage decryptMessage(EncryptedMessage encryptedMessage, OneTimePad pad,
+  protected static PlainMessage decryptMessage(EncryptedMessage encryptedMessage, OneTimePad pad,
                                             boolean text) throws CryptorException {
 
     // Verify the provided pad is the right key material

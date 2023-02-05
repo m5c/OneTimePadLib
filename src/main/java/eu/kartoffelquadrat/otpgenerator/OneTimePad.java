@@ -28,9 +28,11 @@ public class OneTimePad {
   /**
    * Constructor for the One Time Pad class.
    *
-   * @param chunks as a 2D byte array, representing the content of the individual chunks.
+   * @param chunks    as a 2D byte array, representing the content of the individual chunks.
+   * @param parties   as the name@machine strings representing the associated parties.
+   * @param timeStamp as string encoding the moment of pad creation.
    */
-  OneTimePad(String timeStamp, String[] parties, byte[][] chunks) {
+  protected OneTimePad(String timeStamp, String[] parties, byte[][] chunks) {
     this.chunks = chunks;
     this.parties = parties;
     this.timeStamp = timeStamp;
@@ -43,7 +45,7 @@ public class OneTimePad {
    * @param party as the party to test.
    * @return true if the party is known, false otherwise.
    */
-  public boolean isAssociatedParty(String party) {
+  protected boolean isAssociatedParty(String party) {
     return Arrays.stream(parties).anyMatch(party::equals);
   }
 
@@ -55,7 +57,7 @@ public class OneTimePad {
    * @return index of the povided party, can be used for the first encrypted message chunk.
    * @throws InvalidPartyException if the porivded party is not associated to this one time pad.
    */
-  public int getPartyIndex(String party) throws InvalidPartyException {
+  protected int getPartyIndex(String party) throws InvalidPartyException {
 
     // Iterate over parties and search for provided string
     for (int i = 0; i < parties.length; i++) {
@@ -129,7 +131,7 @@ public class OneTimePad {
    * @return byte array holding copy of requested chunk contents.
    * @throws OutOfChunksException if the requests index exceeds the stored chunk array.
    */
-  public byte[] getChunkContent(int chunkId) throws OutOfChunksException {
+  protected byte[] getChunkContent(int chunkId) throws OutOfChunksException {
 
     // Verify the requested index exists. Throw custom exception otherwise.
     if (chunkId >= chunks.length) {

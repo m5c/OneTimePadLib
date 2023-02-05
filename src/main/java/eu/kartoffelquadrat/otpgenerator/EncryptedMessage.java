@@ -23,7 +23,7 @@ public class EncryptedMessage {
    *
    * @return the one time pad hash registered for this encrypted message.
    */
-  public String getOtpHash() {
+  protected String getOtpHash() {
     return otpHash;
   }
 
@@ -44,7 +44,7 @@ public class EncryptedMessage {
    * @param startChunkIndex as the first chunk id that was used for encryption.
    * @param chops           as the actual encrypted message as 2D byte array.
    */
-  public EncryptedMessage(OneTimePad pad, int startChunkIndex, byte[][] chops) {
+  protected EncryptedMessage(OneTimePad pad, int startChunkIndex, byte[][] chops) {
 
     // Distance between two otp chunks used for consecutive message chops. This equals the amount
     // of parties used in the pad.
@@ -84,7 +84,7 @@ public class EncryptedMessage {
    *
    * @return length of the internal data structure, storing all chops.
    */
-  public int getChopAmount() {
+  protected int getChopAmount() {
     return choppedMessage.size();
   }
 
@@ -93,7 +93,7 @@ public class EncryptedMessage {
    *
    * @return the chunk ids used for encryption.
    */
-  public int[] getChunksUsed() {
+  protected int[] getChunksUsed() {
     return choppedMessage.keySet().stream().mapToInt(Integer::intValue).toArray();
   }
 
@@ -104,7 +104,7 @@ public class EncryptedMessage {
    * @param chopIndex as the index of the mssage chop to receive.
    * @return a copy of the requested byte array.
    */
-  public byte[] getChop(int chopIndex) {
+  protected byte[] getChop(int chopIndex) {
     byte[] targetChop = choppedMessage.get(chopIndex);
     return Arrays.copyOf(targetChop, targetChop.length);
   }
@@ -136,7 +136,7 @@ public class EncryptedMessage {
    *
    * @return next chunk id to use for encryption.
    */
-  public int getFollowUpChunkIndex() {
+  protected int getFollowUpChunkIndex() {
     return followUpChunkIndex;
   }
 }
