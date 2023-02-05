@@ -55,7 +55,7 @@ public class OneTimePad {
    * @return index of the povided party, can be used for the first encrypted message chunk.
    * @throws InvalidPartyException if the porivded party is not associated to this one time pad.
    */
-  public int getStarterChunkIndexforParty(String party) throws InvalidPartyException {
+  public int getPartyIndex(String party) throws InvalidPartyException {
 
     // Iterate over parties and search for provided string
     for (int i = 0; i < parties.length; i++) {

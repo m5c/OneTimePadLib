@@ -10,6 +10,7 @@ package eu.kartoffelquadrat.otpgenerator;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Main access point for library users. Using this class lets you conveniently add new messages to a
@@ -66,8 +67,12 @@ public class Conversation {
 
     // Verify the provided party is valid and assiate it for all times with this conversation
     // object.
-    nextChunkIdForEncryption = oneTimePad.getStarterChunkIndexforParty(party);
-    conversationParty = party;
+    this.conversationParty = party;
+
+    // Set next chunk id to use by the associated party for message encryption
+    this.nextChunkIdForEncryption = getNextAvailableChunkId(history, oneTimePad.getPartyAmount(),
+        oneTimePad.getPartyIndex(party));
+
 
     // Store the cryptogrpahic material
     this.oneTimePad = oneTimePad;
@@ -186,6 +191,33 @@ public class Conversation {
 
     // Combine the validated parameters back to a conversation object.
     return new Conversation(oneTimePad, party, history);
+  }
+
+  /**
+   * Helper method to identify determine the next chunk id to use by the assicated partyu for
+   * encryption. This is needed to determine the followUp chunkId on conversation reconstruction, to
+   * ensure no chunk is used twice.
+   *
+   * @param history       as the list of encrytped messages to analyze.
+   * @param amountParties as the number of parties associated to the conversation per one time pad.
+   * @param partyIndex    integer indicating party for which we are seeking the most recent
+   *                      message.
+   * @return null if the parte never communicated or the most recent encrypted message otherwise.
+   */
+  private int getNextAvailableChunkId(List<EncryptedMessage> history, int amountParties,
+                                      int partyIndex) {
+
+    // Invert the history, so we begin search with the most recent messages.
+    Collections.reverse(history);
+    for (EncryptedMessage encMessage : history) {
+
+      // return message on first party match
+      if (encMessage.getChunksUsed()[0] % amountParties == partyIndex) {
+        return encMessage.getFollowUpChunkIndex();
+      }
+    }
+
+    return partyIndex;
   }
 
   /**

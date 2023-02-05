@@ -60,6 +60,8 @@ public class ConversationTest extends CommonTestUtils {
         decryptedMessage.getPayloadAsString());
   }
 
+  // TODO test for series of mesages, verify chunk IDs used.
+
   @Test
   public void testConversationExportAndRestore() throws PadGeneratorException, CryptorException {
     // Create a pad with four parties and massively chunks.
@@ -92,6 +94,18 @@ public class ConversationTest extends CommonTestUtils {
         decryptedMessage);
     Assert.assertEquals("Retreived decrytped payload string differs from original", message,
         decryptedMessage.getPayloadAsString());
+
+    // Verify the next chunk index is correcty set
+    // Foura parties, party 0 is the one associated to this pad, one message was stored so far.
+    // The next chunk index to use should be: 0 +4 = 4.
+    // Test: create another message and verify the chunk ID used is 4.
+    String followupMessage = "Just another message";
+    PlainMessage followUpPlainMessage =
+        new PlainMessage("alice", "luna", followupMessage.getBytes());
+    EncryptedMessage followupEncryptedMessage =
+        restoredConversation.getEncryptedMessagePreview(followUpPlainMessage);
+    Assert.assertTrue("Followup Encrypted Message had incorrect chunk id used.",
+        followupEncryptedMessage.getChunksUsed()[0] == 4);
   }
 
 
