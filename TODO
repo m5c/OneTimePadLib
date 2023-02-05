@@ -13,5 +13,6 @@ Create a conversation object. Either created from storage or set up new.
 
 Instructions for library users:
 - generating pads, sample storing of pads
-- encrypting messages, follow up indexes
+- encrypting messages, using the conversation object
+- decrypting messages, using the conversation object
 - storing / persisting conversations
