@@ -8,9 +8,21 @@ package eu.kartoffelquadrat.otpgenerator;
 
 public class CommonTestUtils {
 
+  protected String[] getSampleSeriesOfMessages() {
+
+    return new String[] {
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id diam euismod, ",
+        "pretium nisl et, mollis orci. Aliquam vitae elit et felis bibendum facilisis condimentum vitae lorem. Praesent viverra imperdiet convallis. Sed quis malesuada ligula, ut accumsan nulla. Vivamus vestibulum, arcu nec eleifend egestas, elit metus",
+        " semper nisl,", "eu", " molestie", " q", "u", "a ", "m ", " magna vitae justo.",
+        "Fusce lacinia nulla enim, eu finibus augue congue eu. Donec sollicitudin consequat nunc, in congue tellus egestas sed."};
+  }
+
+  protected String[] getDefaultParties() {
+    return new String[] {"alice@luna", "bob@mars", "alice@phobos", "bob@titan"};
+  }
+
   protected OneTimePad createRealisticPad() throws PadGeneratorException {
-    String[] parties = new String[] {"alice@luna", "bob@mars", "alice@phobos", "bob@titan"};
-    return OneTimePadGenerator.generatePad(parties);
+    return OneTimePadGenerator.generatePad(getDefaultParties());
   }
 
   /**

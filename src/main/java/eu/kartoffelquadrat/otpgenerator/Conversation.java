@@ -78,6 +78,16 @@ public class Conversation {
     this.oneTimePad = oneTimePad;
   }
 
+  /**
+   * Exports the encrypted entire message history.
+   *
+   * @return List of all emcrypted messages ever added to this conversation.
+   */
+  public List<EncryptedMessage> getEncryptedConversationHistory() {
+
+    return Collections.unmodifiableList(history);
+  }
+
 
   /**
    * Exports the unencrypted counterpart of the entire message history.
@@ -85,7 +95,7 @@ public class Conversation {
    * @return List of all plain messages ever added to this conversation.
    * @throws CryptorException if decrypting the history failed.
    */
-  public List<PlainMessage> getConversationHistory() throws CryptorException {
+  public List<PlainMessage> getPlainConversationHistory() throws CryptorException {
 
 
     // Convert the entire history to plain messages and return.
@@ -218,24 +228,5 @@ public class Conversation {
     }
 
     return partyIndex;
-  }
-
-  /**
-   * OVerloaded version of perviuos method. Does the same but accepts one time pad as json string
-   * instead of object.
-   *
-   * @param serializedEncryptedMessages json string representing an array of encrypted messages.
-   * @param party                       owner of this conversation, party adding plain messages.
-   * @param serializedOneTimePad        the key material used for this conversation as json string.
-   * @return conversation as a java object.
-   * @throws InvalidPartyException if the provided party does not match the one time pad.
-   */
-  static Conversation restore(String serializedEncryptedMessages, String party,
-                              String serializedOneTimePad)
-      throws InvalidPartyException, OneTimePadMissmatchException {
-
-    OneTimePad oneTimePad =
-        SerializationTools.getGsonPadConverter().fromJson(serializedOneTimePad, OneTimePad.class);
-    return restore(serializedEncryptedMessages, party, oneTimePad);
   }
 }

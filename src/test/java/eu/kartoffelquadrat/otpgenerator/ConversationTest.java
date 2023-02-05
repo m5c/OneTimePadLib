@@ -7,6 +7,11 @@
 
 package eu.kartoffelquadrat.otpgenerator;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -50,17 +55,99 @@ public class ConversationTest extends CommonTestUtils {
 
     // Verify the message was added
     Assert.assertEquals("Expected history size was 1, but the retrieved size is not.", 1,
-        aliceConversation.getConversationHistory().size());
+        aliceConversation.getPlainConversationHistory().size());
 
     // Verify the decrypted message is identical
-    PlainMessage decryptedMessage = aliceConversation.getConversationHistory().iterator().next();
+    PlainMessage decryptedMessage =
+        aliceConversation.getPlainConversationHistory().iterator().next();
     Assert.assertEquals("Retreived decrypted message differs from original message.", plainMessage,
         decryptedMessage);
     Assert.assertEquals("Retreived decrytped payload string differs from original", message,
         decryptedMessage.getPayloadAsString());
   }
 
-  // TODO test for series of mesages, verify chunk IDs used.
+  @Test
+  public void testChunkIdNoCollisionFourPartyConversation()
+      throws PadGeneratorException, CryptorException {
+
+    // Create pad for four parties
+    OneTimePad fourPartyPad = createRealisticPad();
+    String[] parties = getDefaultParties();
+    String[] messageSeries = getSampleSeriesOfMessages();
+
+    // Create the four associated conversations
+    Conversation aliceConversationLuna = new Conversation(fourPartyPad, parties[0]);
+    Conversation bobConversationMars = new Conversation(fourPartyPad, parties[1]);
+    Conversation aliceConversationPhobos = new Conversation(fourPartyPad, parties[2]);
+    Conversation bobConversationTitan = new Conversation(fourPartyPad, parties[3]);
+
+    // Pump up one conversation with encrypted messages (and direct plain messages)
+    // Some of them long, some of them short
+    aliceConversationLuna.addPlainMessage(
+        new PlainMessage("alice", "luna", messageSeries[0].getBytes()));
+    aliceConversationLuna.addPlainMessage(
+        new PlainMessage("alice", "luna", messageSeries[1].getBytes()));
+    aliceConversationLuna.addPlainMessage(
+        new PlainMessage("alice", "luna", messageSeries[2].getBytes()));
+
+    aliceConversationLuna.addEncryptedMessage(bobConversationMars.addPlainMessage(
+        new PlainMessage("bob", "mars", messageSeries[3].getBytes())));
+    aliceConversationLuna.addEncryptedMessage(bobConversationMars.addPlainMessage(
+        new PlainMessage("bob", "mars", messageSeries[4].getBytes())));
+
+    aliceConversationLuna.addEncryptedMessage(aliceConversationPhobos.addPlainMessage(
+        new PlainMessage("alice", "phobos", messageSeries[5].getBytes())));
+    aliceConversationLuna.addEncryptedMessage(aliceConversationPhobos.addPlainMessage(
+        new PlainMessage("alice", "phobos", messageSeries[6].getBytes())));
+
+    aliceConversationLuna.addEncryptedMessage(bobConversationTitan.addPlainMessage(
+        new PlainMessage("bob", "titan", messageSeries[7].getBytes())));
+
+    aliceConversationLuna.addPlainMessage(
+        new PlainMessage("alice", "luna", messageSeries[8].getBytes()));
+    aliceConversationLuna.addPlainMessage(
+        new PlainMessage("alice", "luna", messageSeries[9].getBytes()));
+
+    // Exdtract all chunk IDs ever used in encrypted messages. Ensure there are no collisions.
+    Set<Integer> allChunkIdsUsed = new LinkedHashSet<>();
+    for (EncryptedMessage encMessage : aliceConversationLuna.getEncryptedConversationHistory()) {
+      int[] chunksUsed = encMessage.getChunksUsed();
+      for (int i = 0; i < chunksUsed.length; i++) {
+        if (allChunkIdsUsed.contains(chunksUsed[i])) {
+          Assert.fail("ChunkId collision in test conversation.");
+        }
+        allChunkIdsUsed.add(chunksUsed[i]);
+      }
+    }
+  }
+
+  @Test
+  public void testAddEncryptedMessageToParallelConversation()
+      throws PadGeneratorException, CryptorException {
+
+    // Create a pad with four parties and massively chunks.
+    OneTimePad pad = createRealisticPad();
+
+    // Create a conversation, assume the writing party is alice on machine luna.
+    Conversation aliceConversation = new Conversation(pad, "alice@luna");
+
+    // Create a secret plain message
+    String message = "This is a super secret message. Shushhhhhhh!";
+    PlainMessage plainMessage = new PlainMessage("alice", "luna", message.getBytes());
+
+    // Attempt to add message to conversation, and retrieve encrypted counterpart
+    EncryptedMessage encryptedAliceMessage = aliceConversation.addPlainMessage(plainMessage);
+
+    // Add encrypted counterpart to parallel conversation, maintained by bob
+    // Create a conversation, assume the writing party is alice on machine luna.
+    Conversation bobConversation = new Conversation(pad, "bob@titan");
+    bobConversation.addEncryptedMessage(encryptedAliceMessage);
+
+    // Verify the integrity if retreived from bob's conversation
+    PlainMessage restoredMessage = bobConversation.getPlainConversationHistory().iterator().next();
+    Assert.assertEquals("Encrypted message injhected to parallel conversation lost integrity",
+        restoredMessage, plainMessage);
+  }
 
   @Test
   public void testConversationExportAndRestore() throws PadGeneratorException, CryptorException {
@@ -89,7 +176,8 @@ public class ConversationTest extends CommonTestUtils {
 
     // Attempt to retrieve plain message and check its integrty
     // Verify the decrypted message is identical
-    PlainMessage decryptedMessage = restoredConversation.getConversationHistory().iterator().next();
+    PlainMessage decryptedMessage =
+        restoredConversation.getPlainConversationHistory().iterator().next();
     Assert.assertEquals("Retreived decrypted message differs from original message.", plainMessage,
         decryptedMessage);
     Assert.assertEquals("Retreived decrytped payload string differs from original", message,
