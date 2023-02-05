@@ -168,7 +168,7 @@ public class Conversation {
       throws InvalidPartyException, OneTimePadMissmatchException {
 
     // verify the party is associated to this pad (throws exception if not indexed)
-    oneTimePad.getStarterChunkIndexforParty(party);
+    oneTimePad.isAssociatedParty(party);
 
     // restore the provided json string of encrypted messages back to an object
     EncryptedMessage[] encryptedMessagesArray = SerializationTools.getGsonPadConverter()
@@ -177,7 +177,7 @@ public class Conversation {
 
     // verify the messages match the provided one time pad
     if (encryptedMessagesArray.length > 0) {
-      if (encryptedMessagesArray[0].getOtpHash().equals(oneTimePad.getHash())) {
+      if (!encryptedMessagesArray[0].getOtpHash().equals(oneTimePad.getHash())) {
         throw new OneTimePadMissmatchException(
             "Conversation cannot be restored because the provided message history is not compatible"
                 + " to the provided cryptographic material.");

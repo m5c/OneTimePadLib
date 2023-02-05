@@ -46,7 +46,7 @@ public class ConversationTest extends CommonTestUtils {
     PlainMessage plainMessage = new PlainMessage("alice", "luna", message.getBytes());
 
     // Attempt to add message to conversation, and retrieve encrypted counterpart
-    EncryptedMessage encMessage = aliceConversation.addPlainMessage(plainMessage);
+    aliceConversation.addPlainMessage(plainMessage);
 
     // Verify the message was added
     Assert.assertEquals("Expected history size was 1, but the retrieved size is not.", 1,
@@ -61,15 +61,37 @@ public class ConversationTest extends CommonTestUtils {
   }
 
   @Test
-  public void testConversationExportAndRestore() {
-//    // Create a pad with four parties and massively chunks.
-//    OneTimePad pad = createRealisticPad();
-//
-//    // Create a conversation, assume the writing party is alice on machine luna.
-//    Conversation aliceConversation = new Conversation(pad, "alice@luna");
-//
-//    // Create a second conversation that belongs to bob, on machine phobos.
-//    Conversation bobConversation = new Conversation(pad, "bob@titan");
+  public void testConversationExportAndRestore() throws PadGeneratorException, CryptorException {
+    // Create a pad with four parties and massively chunks.
+    OneTimePad pad = createRealisticPad();
+    String party = "alice@luna";
+
+    // Create a conversation, assume the writing party is alice on machine luna.
+    Conversation aliceConversation = new Conversation(pad, party);
+
+    // Create a second conversation that belongs to bob, on machine phobos.
+    Conversation bobConversation = new Conversation(pad, "bob@titan");
+
+    // Create a secret plain message
+    String message = "This is a super secret message. Shushhhhhhh!";
+    PlainMessage plainMessage = new PlainMessage("alice", "luna", message.getBytes());
+
+    // Attempt to add message to conversation
+    aliceConversation.addPlainMessage(plainMessage);
+
+    // Try to export conversation to json
+    String jsonConversation = aliceConversation.serializeEncryptedMessagesToJson();
+
+    // try to convert conversation back
+    Conversation restoredConversation = Conversation.restore(jsonConversation, party, pad);
+
+    // Attempt to retrieve plain message and check its integrty
+    // Verify the decrypted message is identical
+    PlainMessage decryptedMessage = restoredConversation.getConversationHistory().iterator().next();
+    Assert.assertEquals("Retreived decrypted message differs from original message.", plainMessage,
+        decryptedMessage);
+    Assert.assertEquals("Retreived decrytped payload string differs from original", message,
+        decryptedMessage.getPayloadAsString());
   }
 
 
