@@ -141,6 +141,7 @@
                     <reportOutputDirectory>${project.reporting.outputDirectory}/docs
                     </reportOutputDirectory>
                     <destDir>docs</destDir>
+                    <show>public</show>
                 </configuration>
                 <executions>
                     <execution>

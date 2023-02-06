@@ -26,79 +26,157 @@ A secure use of one-time-pads is subject to several conditions. If not respected
 transmitted messages may be compromised.
 
 * All communicating parties must use the same one-time-pad for the entire communication.  
-However, the protection of encrypted messages is only as good as the way the one time pads have been exchanged.
-* A crypto chunk (random byte series withing a pad) must be never used for more than one message. Multi encryption of different messages, using the same one time pad chunk [opens gate to statistic attacks](https://www.douglas.stebila.ca/teaching/visual-one-time-pad/).  
-The library comes with functionality that tells client software which chunk should be used for the next encryption. See [usage](#usage) section.
+  However, the protection of encrypted messages is only as good as the way the one time pads have
+  been exchanged.
+* A crypto chunk (random byte series withing a pad) must be never used for more than one message.
+  Multi encryption of different messages, using the same one time pad
+  chunk [opens gate to statistic attacks](https://www.douglas.stebila.ca/teaching/visual-one-time-pad/).  
+  The library comes with functionality that tells client software which chunk should be used for the
+  next encryption. See [usage](#usage) section.
 
 #### Recommendations for a secure use
 
- * The one-time-pad must be exchanged in a secure manner, ideally the parties gather physically at the
+* The one-time-pad must be exchanged in a secure manner, ideally the parties gather physically at
+  the
   moment of pad creation, for a secure transfer (Airdrop, Usb-Drive, LAN, etc...)
- * Use unique chunks for every message encryption  
-Every one time pad is associated to a fixed set of communicating parties. Internally it and reserves a subset of the available chunks per party.  
+* Use unique chunks for every message encryption  
+  Every one time pad is associated to a fixed set of communicating parties. Internally it and
+  reserves a subset of the available chunks per party.
     * Use only the chunks belonging to your party for encryption. See [usage](#usage) section.
-    * Avoid double use of a chunk, by requesting follow-up indexes from the encrypted message object. See [usage](#usage) section.
- * Register multiple end-clients as individual parties, to associate individual chunks to each of them.  
-This is why on pad creation, parties are always specified as a ```username``` + ```device``` bundle, e.g. ```max@desktop```.
-
+    * Avoid double use of a chunk, by requesting follow-up indexes from the encrypted message
+      object. See [usage](#usage) section.
+* Register multiple end-clients as individual parties, to associate individual chunks to each of
+  them.  
+  This is why on pad creation, parties are always specified as a ```username``` + ```device```
+  bundle, e.g. ```max@desktop```.
 
 The library provides method signatures that forward a secure usage. For details see
 the [Usage](#usage) section
 
 ## Usage
 
-...
+This section explains how to access to library porvisioned functionality for the purpose of a secure
+communication. Further code examles are in the [ConversationTest](https://m5c.github.io/OneTimePadLib) class.
+
+### Pad creation
+
+Before any form of communication, one of the participating parties must create a
+new ```OneTimePad``` instance. This can be done conveniently, using the
+corresponding ```OneTimePadGenerator``` factory class. Note that all parties must be known at the
+moment of pad creation. A party is defined by a string of format ```[usernmae]@[machinename]```.
+
+Sample code:
+
+```java
+  String[]parties=new String[]{"max@laptop","max@phone","moritz@dektop"};
+    OneTimePad pad=OneTimePadGenerator.generatePad(getDefaultParties());
+```
+
+The pad can then be serialized, e.g. for storage to file and subeequent sharing with other parties:
+
+```java
+  String serializedPad=SerializationTools
+    .getGsonPadConverter().toJson(pad);
+```
+
+### Conversations
+
+The key component for secure message handling is
+the [```Conversation``` class](https://m5c.github.io/OneTimePadLib). A conversation is based on a
+existing ```OneTimePad```. It does not matter whether the pad was newly created or loaded from disk.
+
+Sample code for creating a newm empty conversation:
+
+```java
+  Conversation maxLaptopConversation
+    =new Conversation(pad,"max@laptop");
+```
+
+Conversations offer two main methods:
+
+* A method for **adding new plain messages**: This one allows the conversation owner (in this
+  case ```max```) to provide a new, unportected message, for secure encryption and adding to the
+  conversation:
+
+```java
+  String payload="This is a very secret message!";
+    PlainMessage secretMessage=new PlainMessage("max","laptop",payload.getBytes());
+    EnctypedMessage enc=maxLaptopConversation.encryptAndAddMessage(secretMessage);
+```
+
+* A nethod for **adding existing encrypted messages**: This one allows adding messages that have
+  already been encrypted by another party. Adding implicitly returns the corresponding plain
+  message:
+
+```java
+  EncryptedMessage receivedEncMessage=...;
+  PlainMessage decryptedMessage=maxLaptopConversion.addEncryptedMessage(receivedEncMessage);
+  System.out.println(decryptedMessage.getPayloadAsString());
+```
+
+> Note: In both cases the effect is that an encrypted message is added to the conversation. The
+> difference is only whether the calling client is the author of the message or just the receiver.
+
+### Save and Load, Serialization
+
+The library comes with further features for convenient saving and loading of pads and conversations.
+For details, see the [javadoc of public library methods](https://m5c.github.io/OneTimePadLib).
 
 ## Installation
 
-There are two ways to use this library in client software:
+There are two ways to install this library:
 
-* As standalone program, to create *One Time Pads* and store them on disk for later use.
-* As library, to retrieve new *One Time Pads* as objects.
+* Reference as standalone Jar on classpath
 
-### Jar
+### Library as Jar file
 
-This option is for developpers who want to manually add the library to their ```classpath```.
+This option is for developers who want to manually add the library to their ```classpath```.
 
-* Build the library with ```mvn clean package```
+* Clone the library: ```git clone https://github.com/m5c/OneTimePadLib```
+* Build the library with ```cd OneTimePadLib; mvn clean package```
 * The standalone JAR is generated to the ```target``` folder.
 
-### Maven
+### Reference as Maven dependency
 
 This option is for developpers who want to access the library from a maven project.   
-The library can be added using this dependency block:
+The library can be referenced using this dependency block:
 
 ```xml
-...
+
+<dependency>
+    <groupId>eu.kartoffelquadrat</groupId>
+    <artifactId>otplib</artifactId>
+    <version>1.1</version>
+</dependency>
 ```
 
-The library is not in the official maven repositories. It must be either installed locally, or be
-referenced from the developpers repository.
+Note that the library is not in the official maven repositories. Therefore, it must be either
+installed manually, or pulled from a third party repository.
 
 #### Local Installation
 
-```bash
-mvn clean package
-```
+You can direclty install this library into your local maven repository for further referencing.
+Using this option you build the library right from its sources.
 
+```bash
+git clone https://github.com/m5c/OneTimePadLib
+cd OneTimePadLib
+mvn clean install
+```
 
 #### Reference to Developpers Repo
 
 To use a provided binary, pulled from the developpers, use this trusted reposiotory:
 
 ```xml
-...
+
+<repositories>
+    <repository>
+        <id>otplibrepo</id>
+        <url>https://www.cs.mcgill.ca/~mschie3/otplibrepo/</url>
+    </repository>
+</repositories>
 ```
-## Misc
-
-You can change the amount of chunks per OTP and chunk length per OTP with these variables:
-
-* ```CHUNK_SIZE```: Length in bytes of message chunks. Shorter chunks have shown to be more robust
-  against message tampering by communication relays. Notably email providers tend add linebreaks to
-  longer lines.   
-  Default is 64
-* ```CHUNK_AMOUNT```: Total amount of chunks to create per OTP.  
-  Default is 16*1024
 
 ## Author
 

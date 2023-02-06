@@ -117,7 +117,7 @@ public class Conversation {
    * @return the encrypted counterpart of the added message.
    * @throws CryptorException if encrypting the message failed.
    */
-  public EncryptedMessage addPlainMessage(PlainMessage message) throws CryptorException {
+  public EncryptedMessage encryptAndAddMessage(PlainMessage message) throws CryptorException {
 
     // Apply next chunk to use to create a new encypted message
     EncryptedMessage encMessage =

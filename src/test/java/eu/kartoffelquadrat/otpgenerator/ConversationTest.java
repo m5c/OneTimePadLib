@@ -48,7 +48,7 @@ public class ConversationTest extends CommonTestUtils {
     PlainMessage plainMessage = new PlainMessage("alice", "luna", message.getBytes());
 
     // Attempt to add message to conversation, and retrieve encrypted counterpart
-    aliceConversation.addPlainMessage(plainMessage);
+    aliceConversation.encryptAndAddMessage(plainMessage);
 
     // Verify the message was added
     Assert.assertEquals("Expected history size was 1, but the retrieved size is not.", 1,
@@ -80,29 +80,29 @@ public class ConversationTest extends CommonTestUtils {
 
     // Pump up one conversation with encrypted messages (and direct plain messages)
     // Some of them long, some of them short
-    aliceConversationLuna.addPlainMessage(
+    aliceConversationLuna.encryptAndAddMessage(
         new PlainMessage("alice", "luna", messageSeries[0].getBytes()));
-    aliceConversationLuna.addPlainMessage(
+    aliceConversationLuna.encryptAndAddMessage(
         new PlainMessage("alice", "luna", messageSeries[1].getBytes()));
-    aliceConversationLuna.addPlainMessage(
+    aliceConversationLuna.encryptAndAddMessage(
         new PlainMessage("alice", "luna", messageSeries[2].getBytes()));
 
-    aliceConversationLuna.addEncryptedMessage(bobConversationMars.addPlainMessage(
+    aliceConversationLuna.addEncryptedMessage(bobConversationMars.encryptAndAddMessage(
         new PlainMessage("bob", "mars", messageSeries[3].getBytes())));
-    aliceConversationLuna.addEncryptedMessage(bobConversationMars.addPlainMessage(
+    aliceConversationLuna.addEncryptedMessage(bobConversationMars.encryptAndAddMessage(
         new PlainMessage("bob", "mars", messageSeries[4].getBytes())));
 
-    aliceConversationLuna.addEncryptedMessage(aliceConversationPhobos.addPlainMessage(
+    aliceConversationLuna.addEncryptedMessage(aliceConversationPhobos.encryptAndAddMessage(
         new PlainMessage("alice", "phobos", messageSeries[5].getBytes())));
-    aliceConversationLuna.addEncryptedMessage(aliceConversationPhobos.addPlainMessage(
+    aliceConversationLuna.addEncryptedMessage(aliceConversationPhobos.encryptAndAddMessage(
         new PlainMessage("alice", "phobos", messageSeries[6].getBytes())));
 
-    aliceConversationLuna.addEncryptedMessage(bobConversationTitan.addPlainMessage(
+    aliceConversationLuna.addEncryptedMessage(bobConversationTitan.encryptAndAddMessage(
         new PlainMessage("bob", "titan", messageSeries[7].getBytes())));
 
-    aliceConversationLuna.addPlainMessage(
+    aliceConversationLuna.encryptAndAddMessage(
         new PlainMessage("alice", "luna", messageSeries[8].getBytes()));
-    aliceConversationLuna.addPlainMessage(
+    aliceConversationLuna.encryptAndAddMessage(
         new PlainMessage("alice", "luna", messageSeries[9].getBytes()));
 
     // Exdtract all chunk IDs ever used in encrypted messages. Ensure there are no collisions.
@@ -133,7 +133,7 @@ public class ConversationTest extends CommonTestUtils {
     PlainMessage plainMessage = new PlainMessage("alice", "luna", message.getBytes());
 
     // Attempt to add message to conversation, and retrieve encrypted counterpart
-    EncryptedMessage encryptedAliceMessage = aliceConversation.addPlainMessage(plainMessage);
+    EncryptedMessage encryptedAliceMessage = aliceConversation.encryptAndAddMessage(plainMessage);
 
     // Add encrypted counterpart to parallel conversation, maintained by bob
     // Create a conversation, assume the writing party is alice on machine luna.
@@ -163,7 +163,7 @@ public class ConversationTest extends CommonTestUtils {
     PlainMessage plainMessage = new PlainMessage("alice", "luna", message.getBytes());
 
     // Attempt to add message to conversation
-    aliceConversation.addPlainMessage(plainMessage);
+    aliceConversation.encryptAndAddMessage(plainMessage);
 
     // Try to export conversation to json
     String jsonConversation = aliceConversation.serializeEncryptedMessagesToJson();
