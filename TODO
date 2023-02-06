@@ -1,9 +1,0 @@
-Documentation / how to use section / terminilogy (chops/chunks/pads/hashes) / Pitfalls and user responsibilities
-- chunk - a series of random noise within the one time pad.
-- chop - a message with exact size of chunk, can be encrypted or not.
-
-Instructions for library users:
-- generating pads, sample storing of pads
-- encrypting messages, using the conversation object
-- decrypting messages, using the conversation object
-- storing / persisting conversations

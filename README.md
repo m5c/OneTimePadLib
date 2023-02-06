@@ -12,13 +12,13 @@ message encryption.
 
 ### Safety
 
-The library sets on one-time-pads, that is to say key material that is used symmmetrically for
+The library sets on one-time-pads, that is to say key material that is used symmetrically for
 encryption and decryption. It is considered the only unbreakable encryption, since the key material
-is as long as the protected content. Unlike with other, assymmetric methods, breaking a message is
+is as long as the protected content. Unlike with other, asymmetric methods, breaking a message is
 not a matter of computational power, since any message of *approximately equal* target length is a
 potential valid outcome.
 
-> (*) This library conceals the exact length of individual messages by whitespace padding.
+> (*) This library conceals the exact length of individual messages by white space padding.
 
 #### Restrictions
 
@@ -38,7 +38,7 @@ transmitted messages may be compromised.
 
 * The one-time-pad must be exchanged in a secure manner, ideally the parties gather physically at
   the
-  moment of pad creation, for a secure transfer (Airdrop, Usb-Drive, LAN, etc...)
+  moment of pad creation, for a secure transfer (Airdrop, USB-Drive, LAN, etc...)
 * Use unique chunks for every message encryption  
   Every one time pad is associated to a fixed set of communicating parties. Internally it and
   reserves a subset of the available chunks per party.
@@ -55,15 +55,15 @@ the [Usage](#usage) section
 
 ## Usage
 
-This section explains how to access to library porvisioned functionality for the purpose of a secure
-communication. Further code examles are in the [ConversationTest](https://m5c.github.io/OneTimePadLib) class.
+This section explains how to access to library provisioned functionality for the purpose of a secure
+communication. Further code examples are in the [ConversationTest](src/test/java/eu/kartoffelquadrat/otplib/ConversationTest.java) class.
 
 ### Pad creation
 
 Before any form of communication, one of the participating parties must create a
 new ```OneTimePad``` instance. This can be done conveniently, using the
 corresponding ```OneTimePadGenerator``` factory class. Note that all parties must be known at the
-moment of pad creation. A party is defined by a string of format ```[usernmae]@[machinename]```.
+moment of pad creation. A party is defined by a string of format ```[username]@[machinename]```.
 
 Sample code:
 
@@ -72,7 +72,7 @@ Sample code:
     OneTimePad pad=OneTimePadGenerator.generatePad(getDefaultParties());
 ```
 
-The pad can then be serialized, e.g. for storage to file and subeequent sharing with other parties:
+The pad can then be serialized, e.g. for storage to file and subsequent sharing with other parties:
 
 ```java
   String serializedPad=SerializationTools
@@ -85,7 +85,7 @@ The key component for secure message handling is
 the [```Conversation``` class](https://m5c.github.io/OneTimePadLib). A conversation is based on a
 existing ```OneTimePad```. It does not matter whether the pad was newly created or loaded from disk.
 
-Sample code for creating a newm empty conversation:
+Sample code for creating a new empty conversation:
 
 ```java
   Conversation maxLaptopConversation
@@ -95,7 +95,7 @@ Sample code for creating a newm empty conversation:
 Conversations offer two main methods:
 
 * A method for **adding new plain messages**: This one allows the conversation owner (in this
-  case ```max```) to provide a new, unportected message, for secure encryption and adding to the
+  case ```max```) to provide a new, unprotected message, for secure encryption and adding to the
   conversation:
 
 ```java
@@ -104,7 +104,7 @@ Conversations offer two main methods:
     EnctypedMessage enc=maxLaptopConversation.encryptAndAddMessage(secretMessage);
 ```
 
-* A nethod for **adding existing encrypted messages**: This one allows adding messages that have
+* A method for **adding existing encrypted messages**: This one allows adding messages that have
   already been encrypted by another party. Adding implicitly returns the corresponding plain
   message:
 
@@ -120,7 +120,7 @@ Conversations offer two main methods:
 ### Save and Load, Serialization
 
 The library comes with further features for convenient saving and loading of pads and conversations.
-For details, see the [javadoc of public library methods](https://m5c.github.io/OneTimePadLib).
+For details, see the [java doc of public library methods](https://m5c.github.io/OneTimePadLib).
 
 ## Installation
 
@@ -138,7 +138,7 @@ This option is for developers who want to manually add the library to their ```c
 
 ### Reference as Maven dependency
 
-This option is for developpers who want to access the library from a maven project.   
+This option is for developers who want to access the library from a maven project.   
 The library can be referenced using this dependency block:
 
 ```xml
@@ -155,7 +155,7 @@ installed manually, or pulled from a third party repository.
 
 #### Local Installation
 
-You can direclty install this library into your local maven repository for further referencing.
+You can directly install this library into your local maven repository for further referencing.
 Using this option you build the library right from its sources.
 
 ```bash
@@ -164,9 +164,9 @@ cd OneTimePadLib
 mvn clean install
 ```
 
-#### Reference to Developpers Repo
+#### Reference to Developers Repo
 
-To use a provided binary, pulled from the developpers, use this trusted reposiotory:
+To use a provided binary, pulled from the developers, use this trusted repository:
 
 ```xml
 
