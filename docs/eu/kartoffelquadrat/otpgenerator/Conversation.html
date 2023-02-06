@@ -116,7 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">eu.kartoffelquadrat.otpgenerator</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">eu.kartoffelquadrat.otplib</a></div>
 <h2 title="Class Conversation" class="title">Class Conversation</h2>
 </div>
 <div class="contentContainer">
@@ -124,7 +124,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>eu.kartoffelquadrat.otpgenerator.Conversation</li>
+<li>eu.kartoffelquadrat.otplib.Conversation</li>
 </ul>
 </li>
 </ul>
@@ -164,7 +164,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(eu.kartoffelquadrat.otpgenerator.OneTimePad,java.lang.String)">Conversation</a></span>&#8203;(<a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otpgenerator">OneTimePad</a>&nbsp;oneTimePad,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(eu.kartoffelquadrat.otpgenerator.OneTimePad,java.lang.String)">Conversation</a></span>&#8203;(<a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otplib">OneTimePad</a>&nbsp;oneTimePad,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;party)</code></th>
 <td class="colLast">
 <div class="block">Constructor to set up a new conversation.</div>
@@ -189,21 +189,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="EncryptedMessage.html" title="class in eu.kartoffelquadrat.otpgenerator">EncryptedMessage</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encryptAndAddMessage(eu.kartoffelquadrat.otpgenerator.PlainMessage)">encryptAndAddMessage</a></span>&#8203;(<a href="PlainMessage.html" title="class in eu.kartoffelquadrat.otpgenerator">PlainMessage</a>&nbsp;message)</code></th>
+<td class="colFirst"><code><a href="EncryptedMessage.html" title="class in eu.kartoffelquadrat.otplib">EncryptedMessage</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encryptAndAddMessage(eu.kartoffelquadrat.otpgenerator.PlainMessage)">encryptAndAddMessage</a></span>&#8203;(<a href="PlainMessage.html" title="class in eu.kartoffelquadrat.otplib">PlainMessage</a>&nbsp;message)</code></th>
 <td class="colLast">
 <div class="block">GHelper method to add a plain message to the conversation.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="EncryptedMessage.html" title="class in eu.kartoffelquadrat.otpgenerator">EncryptedMessage</a>&gt;</code></td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="EncryptedMessage.html" title="class in eu.kartoffelquadrat.otplib">EncryptedMessage</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncryptedConversationHistory()">getEncryptedConversationHistory</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Exports the encrypted entire message history.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="PlainMessage.html" title="class in eu.kartoffelquadrat.otpgenerator">PlainMessage</a>&gt;</code></td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="PlainMessage.html" title="class in eu.kartoffelquadrat.otplib">PlainMessage</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPlainConversationHistory()">getPlainConversationHistory</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Exports the unencrypted counterpart of the entire message history.</div>
@@ -239,9 +239,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>Conversation</h4>
-<pre>public&nbsp;Conversation&#8203;(<a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otpgenerator">OneTimePad</a>&nbsp;oneTimePad,
+<pre>public&nbsp;Conversation&#8203;(<a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otplib">OneTimePad</a>&nbsp;oneTimePad,
                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;party)
-             throws <a href="InvalidPartyException.html" title="class in eu.kartoffelquadrat.otpgenerator">InvalidPartyException</a></pre>
+             throws <a href="InvalidPartyException.html" title="class in eu.kartoffelquadrat.otplib">InvalidPartyException</a></pre>
 <div class="block">Constructor to set up a new conversation. This associates a provided one time pad with a
  provided party (the library client user) and initiliazes a new, blank conversation.</div>
 <dl>
@@ -249,7 +249,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>oneTimePad</code> - as the cryptographic material to be used for this conversation.</dd>
 <dd><code>party</code> - as the identifier of the party adding plain messages to encrypt.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="InvalidPartyException.html" title="class in eu.kartoffelquadrat.otpgenerator">InvalidPartyException</a></code> - if the provided party string does not match the pad.</dd>
+<dd><code><a href="InvalidPartyException.html" title="class in eu.kartoffelquadrat.otplib">InvalidPartyException</a></code> - if the provided party string does not match the pad.</dd>
 </dl>
 </li>
 </ul>
@@ -269,7 +269,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getEncryptedConversationHistory</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="EncryptedMessage.html" title="class in eu.kartoffelquadrat.otpgenerator">EncryptedMessage</a>&gt;&nbsp;getEncryptedConversationHistory()</pre>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="EncryptedMessage.html" title="class in eu.kartoffelquadrat.otplib">EncryptedMessage</a>&gt;&nbsp;getEncryptedConversationHistory()</pre>
 <div class="block">Exports the encrypted entire message history.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -283,14 +283,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getPlainConversationHistory</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="PlainMessage.html" title="class in eu.kartoffelquadrat.otpgenerator">PlainMessage</a>&gt;&nbsp;getPlainConversationHistory()
-                                               throws <a href="CryptorException.html" title="class in eu.kartoffelquadrat.otpgenerator">CryptorException</a></pre>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="PlainMessage.html" title="class in eu.kartoffelquadrat.otplib">PlainMessage</a>&gt;&nbsp;getPlainConversationHistory()
+                                               throws <a href="CryptorException.html" title="class in eu.kartoffelquadrat.otplib">CryptorException</a></pre>
 <div class="block">Exports the unencrypted counterpart of the entire message history.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>List of all plain messages ever added to this conversation.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="CryptorException.html" title="class in eu.kartoffelquadrat.otpgenerator">CryptorException</a></code> - if decrypting the history failed.</dd>
+<dd><code><a href="CryptorException.html" title="class in eu.kartoffelquadrat.otplib">CryptorException</a></code> - if decrypting the history failed.</dd>
 </dl>
 </li>
 </ul>
@@ -300,8 +300,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>encryptAndAddMessage</h4>
-<pre class="methodSignature">public&nbsp;<a href="EncryptedMessage.html" title="class in eu.kartoffelquadrat.otpgenerator">EncryptedMessage</a>&nbsp;encryptAndAddMessage&#8203;(<a href="PlainMessage.html" title="class in eu.kartoffelquadrat.otpgenerator">PlainMessage</a>&nbsp;message)
-                                      throws <a href="CryptorException.html" title="class in eu.kartoffelquadrat.otpgenerator">CryptorException</a></pre>
+<pre class="methodSignature">public&nbsp;<a href="EncryptedMessage.html" title="class in eu.kartoffelquadrat.otplib">EncryptedMessage</a>&nbsp;encryptAndAddMessage&#8203;(<a href="PlainMessage.html" title="class in eu.kartoffelquadrat.otplib">PlainMessage</a>&nbsp;message)
+                                      throws <a href="CryptorException.html" title="class in eu.kartoffelquadrat.otplib">CryptorException</a></pre>
 <div class="block">GHelper method to add a plain message to the conversation. The method implementation
  automatically figures out the next chunk id to use to ensure message procetion and integrity.</div>
 <dl>
@@ -310,7 +310,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the encrypted counterpart of the added message.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="CryptorException.html" title="class in eu.kartoffelquadrat.otpgenerator">CryptorException</a></code> - if encrypting the message failed.</dd>
+<dd><code><a href="CryptorException.html" title="class in eu.kartoffelquadrat.otplib">CryptorException</a></code> - if encrypting the message failed.</dd>
 </dl>
 </li>
 </ul>

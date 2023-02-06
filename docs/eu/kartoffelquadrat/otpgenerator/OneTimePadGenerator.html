@@ -116,7 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">eu.kartoffelquadrat.otpgenerator</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">eu.kartoffelquadrat.otplib</a></div>
 <h2 title="Class OneTimePadGenerator" class="title">Class OneTimePadGenerator</h2>
 </div>
 <div class="contentContainer">
@@ -124,7 +124,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>eu.kartoffelquadrat.otpgenerator.OneTimePadGenerator</li>
+<li>eu.kartoffelquadrat.otplib.OneTimePadGenerator</li>
 </ul>
 </li>
 </ul>
@@ -178,7 +178,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otpgenerator">OneTimePad</a></code></td>
+<td class="colFirst"><code>static <a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otplib">OneTimePad</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generatePad(int,int,java.lang.String%5B%5D)">generatePad</a></span>&#8203;(int&nbsp;padSize,
            int&nbsp;chunkSize,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;parties)</code></th>
@@ -188,7 +188,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otpgenerator">OneTimePad</a></code></td>
+<td class="colFirst"><code>static <a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otplib">OneTimePad</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generatePad(java.lang.String%5B%5D)">generatePad</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;parties)</code></th>
 <td class="colLast">
 <div class="block">Creates a one time pad (2D byte array) consisting of chunks.</div>
@@ -243,8 +243,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>generatePad</h4>
-<pre class="methodSignature">public static&nbsp;<a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otpgenerator">OneTimePad</a>&nbsp;generatePad&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;parties)
-                              throws <a href="PadGeneratorException.html" title="class in eu.kartoffelquadrat.otpgenerator">PadGeneratorException</a></pre>
+<pre class="methodSignature">public static&nbsp;<a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otplib">OneTimePad</a>&nbsp;generatePad&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;parties)
+                              throws <a href="PadGeneratorException.html" title="class in eu.kartoffelquadrat.otplib">PadGeneratorException</a></pre>
 <div class="block">Creates a one time pad (2D byte array) consisting of chunks. The chunks are meant for single
  use encryption of the individual messages while the pad serves as unit for pretection of a
  communication.</div>
@@ -254,7 +254,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>OneTimePad object holding the requested amount of chunks and size.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="PadGeneratorException.html" title="class in eu.kartoffelquadrat.otpgenerator">PadGeneratorException</a></code> - if one of the parties does not follow string convention.</dd>
+<dd><code><a href="PadGeneratorException.html" title="class in eu.kartoffelquadrat.otplib">PadGeneratorException</a></code> - if one of the parties does not follow string convention.</dd>
 </dl>
 </li>
 </ul>
@@ -264,10 +264,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>generatePad</h4>
-<pre class="methodSignature">public static&nbsp;<a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otpgenerator">OneTimePad</a>&nbsp;generatePad&#8203;(int&nbsp;padSize,
+<pre class="methodSignature">public static&nbsp;<a href="OneTimePad.html" title="class in eu.kartoffelquadrat.otplib">OneTimePad</a>&nbsp;generatePad&#8203;(int&nbsp;padSize,
                                      int&nbsp;chunkSize,
                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;parties)
-                              throws <a href="PadGeneratorException.html" title="class in eu.kartoffelquadrat.otpgenerator">PadGeneratorException</a></pre>
+                              throws <a href="PadGeneratorException.html" title="class in eu.kartoffelquadrat.otplib">PadGeneratorException</a></pre>
 <div class="block">Overloaded variant of generatePad that allows for customized amount of chunks and chunk size
  used.</div>
 <dl>
@@ -278,7 +278,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>OneTimePad object holding the requested amount of chunks and size.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="PadGeneratorException.html" title="class in eu.kartoffelquadrat.otpgenerator">PadGeneratorException</a></code> - if one of the provided parties does not comply convention.</dd>
+<dd><code><a href="PadGeneratorException.html" title="class in eu.kartoffelquadrat.otplib">PadGeneratorException</a></code> - if one of the provided parties does not comply convention.</dd>
 </dl>
 </li>
 </ul>

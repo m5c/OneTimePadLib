@@ -116,7 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">eu.kartoffelquadrat.otpgenerator</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">eu.kartoffelquadrat.otplib</a></div>
 <h2 title="Class PlainMessage" class="title">Class PlainMessage</h2>
 </div>
 <div class="contentContainer">
@@ -124,7 +124,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>eu.kartoffelquadrat.otpgenerator.PlainMessage</li>
+<li>eu.kartoffelquadrat.otplib.PlainMessage</li>
 </ul>
 </li>
 </ul>
@@ -269,7 +269,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre>public&nbsp;PlainMessage&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;author,
                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;machine,
                     byte[]&nbsp;message)
-             throws <a href="InvalidPartyException.html" title="class in eu.kartoffelquadrat.otpgenerator">InvalidPartyException</a></pre>
+             throws <a href="InvalidPartyException.html" title="class in eu.kartoffelquadrat.otplib">InvalidPartyException</a></pre>
 <div class="block">Constructor without timestamp parameter. Automatically sets timestamp to now. Use this
  constructor if you want to add a new message to the conversation, manually.</div>
 <dl>
@@ -278,7 +278,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>machine</code> - as the client the author used while composing the message.</dd>
 <dd><code>message</code> - as the actual message payload.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="InvalidPartyException.html" title="class in eu.kartoffelquadrat.otpgenerator">InvalidPartyException</a></code> - if the provided name or machine are useing non-alphabet chars.</dd>
+<dd><code><a href="InvalidPartyException.html" title="class in eu.kartoffelquadrat.otplib">InvalidPartyException</a></code> - if the provided name or machine are useing non-alphabet chars.</dd>
 </dl>
 </li>
 </ul>
