@@ -68,8 +68,8 @@ moment of pad creation. A party is defined by a string of format ```[username]@[
 Sample code:
 
 ```java
-  String[]parties=new String[]{"max@laptop","max@phone","moritz@dektop"};
-    OneTimePad pad=OneTimePadGenerator.generatePad(getDefaultParties());
+    String[] parties = new String[]{"max@laptop","max@phone","moritz@dektop"};
+    OneTimePad pad = OneTimePadGenerator.generatePad(parties);
 ```
 
 The pad can then be serialized, e.g. for storage to file and subsequent sharing with other parties:
