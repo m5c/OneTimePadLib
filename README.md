@@ -1,8 +1,8 @@
-# One-Time-Pad Generator
+# One Time Pad Library
 
 ![mavenci](https://github.com/m5c/TigerEncryptionOtpGenerator/actions/workflows/maven.yml/badge.svg)
 
-An all-purpose symmetric crypto library.
+A simple library for symmetric message encryption.
 
 ## About
 
