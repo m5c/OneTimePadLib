@@ -1,5 +1,6 @@
 package eu.kartoffelquadrat.otplib;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import org.apache.commons.codec.binary.Hex;
@@ -9,7 +10,7 @@ import org.apache.commons.codec.binary.Hex;
  * indicate the otp-chunk that has been used for encryption as well as the resulting byte array for
  * he corresponding chunk.
  */
-public class EncryptedMessage {
+public class EncryptedMessage implements Serializable {
 
   // Name reference to the one time pad used for encryption.
 

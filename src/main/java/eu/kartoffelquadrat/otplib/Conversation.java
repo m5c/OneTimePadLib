@@ -73,9 +73,18 @@ public class Conversation {
     this.nextChunkIdForEncryption = getNextAvailableChunkId(history, oneTimePad.getPartyAmount(),
         oneTimePad.getPartyIndex(party));
 
-
     // Store the cryptogrpahic material
     this.oneTimePad = oneTimePad;
+  }
+
+
+  /**
+   * Getter for the assocaited party.
+   *
+   * @return string array describing the party who can add plain messages to this conversation.
+   */
+  public String getConversationParty() {
+    return conversationParty;
   }
 
   /**
@@ -138,9 +147,11 @@ public class Conversation {
    * chunk index. This method is meant to provide a preview of the encrypted message whiole th user
    * is still composing their message.
    *
+   * @param message as the plain message to encrypt.
    * @return a preview of the resutling encrypted message, if the plain message were to be added.
+   * @throws CryptorException if the encryption of the plain message failed.
    */
-  EncryptedMessage getEncryptedMessagePreview(PlainMessage message) throws CryptorException {
+  public EncryptedMessage getEncryptedMessagePreview(PlainMessage message) throws CryptorException {
     return Cryptor.encryptMessage(message, oneTimePad, nextChunkIdForEncryption);
   }
 
@@ -148,9 +159,11 @@ public class Conversation {
    * Adds an encrypted message to the internal store of conversations.
    *
    * @param encryptedMessage message that should be added to the history.
-   * @return plan message variant of the encrypted message.
+   * @return plain message variant of the encrypted message.
+   * @throws CryptorException if the encryption of the plain message failed.
    */
-  PlainMessage addEncryptedMessage(EncryptedMessage encryptedMessage) throws CryptorException {
+  public PlainMessage addEncryptedMessage(EncryptedMessage encryptedMessage)
+      throws CryptorException {
 
     PlainMessage message = Cryptor.decryptMessage(encryptedMessage, oneTimePad, true);
     history.add(encryptedMessage);
@@ -163,7 +176,7 @@ public class Conversation {
    *
    * @return Json string representation of an array of encrypted messages.
    */
-  String serializeEncryptedMessagesToJson() {
+  public String serializeEncryptedMessagesToJson() {
     return SerializationTools.getGsonPadConverter().toJson(history.toArray());
   }
 
@@ -172,14 +185,14 @@ public class Conversation {
    * conversation from disk on program startup.
    *
    * @param serializedEncryptedMessages json string representing an array of encrypted messages.
-   * @param party                       owner of this conversation (the party adding encrypted
-   *                                    messages).
+   * @param party                       owner of this conversation.
    * @param oneTimePad                  the key material used for this conversation.
    * @return conversation as a java object.
-   * @throws InvalidPartyException if the provided party does not match the one time pad.
+   * @throws InvalidPartyException        if the provided party does not match the one time pad.
+   * @throws OneTimePadMissmatchException if there is a mismatch between the provided pad and conv.
    */
-  static Conversation restore(String serializedEncryptedMessages, String party,
-                              OneTimePad oneTimePad)
+  public static Conversation restore(String serializedEncryptedMessages, String party,
+                                     OneTimePad oneTimePad)
       throws InvalidPartyException, OneTimePadMissmatchException {
 
     // verify the party is associated to this pad (throws exception if not indexed)

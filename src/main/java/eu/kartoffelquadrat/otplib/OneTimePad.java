@@ -1,5 +1,6 @@
 package eu.kartoffelquadrat.otplib;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.apache.commons.codec.binary.Hex;
@@ -12,7 +13,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  *
  * @author Maximilian Schiedermeier
  */
-public class OneTimePad {
+public class OneTimePad implements Serializable {
 
   // Indicates timestamp of creation
   private final String timeStamp;
